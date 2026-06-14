@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AEC — Command Center</title>
+<title>AEC -- Command Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=EB+Garamond:wght@300;400;500&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -29,7 +29,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--u
 
 /* LOGIN */
 #login-screen {
-  position:fixed;inset:0;background:var(--bg);z-index:9999;
+  position:fixed;inset:0;background:#000;z-index:10000;
   display:flex;align-items:center;justify-content:center;
 }
 .login-box {
@@ -243,11 +243,11 @@ canvas{width:100%;height:100%}
 <body>
 
 <!-- LOGIN -->
-<div id="login-screen">
+<div id="login-screen" style="display:flex">
   <div class="login-box">
     <div class="login-logo">Ascenda Enterprise Capital</div>
     <div class="login-title">Command Center</div>
-    <div class="login-sub">Private access only — authorized personnel</div>
+    <div class="login-sub">Private access only -- authorized personnel</div>
     <input class="login-input" type="password" id="pw-input" placeholder="Enter access code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeypress="if(event.key==='Enter')checkPass()"/>
     <button class="login-btn" onclick="checkPass()">Access Dashboard →</button>
     <div class="login-error" id="login-error">Invalid access code. Try again.</div>
@@ -255,7 +255,7 @@ canvas{width:100%;height:100%}
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard">
+<div id="dashboard" style="display:none">
 
   <!-- TOP BAR -->
   <div class="topbar">
@@ -292,12 +292,12 @@ canvas{width:100%;height:100%}
       <div class="kpi-card" style="--accent:var(--gold)">
         <div class="kpi-label">Site Traffic (30d)</div>
         <div class="kpi-val">351</div>
-        <div class="kpi-sub">Views · 178 active users</div>
-        <div class="kpi-badge up">↑ From Google Analytics</div>
+        <div class="kpi-sub">Views ? 178 active users</div>
+        <div class="kpi-badge up">^ From Google Analytics</div>
       </div>
       <div class="kpi-card" style="--accent:var(--green)">
         <div class="kpi-label">Open P&L</div>
-        <div class="kpi-val" id="kpi-pnl">—</div>
+        <div class="kpi-val" id="kpi-pnl">--</div>
         <div class="kpi-sub">Live TradeLocker</div>
         <div class="kpi-badge neu" id="kpi-pnl-badge">Connecting...</div>
       </div>
@@ -318,7 +318,7 @@ canvas{width:100%;height:100%}
           <button class="add-btn" onclick="addInvestor()">+ Add</button>
         </div>
         <table>
-          <thead><tr><th>Name</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
+          <thead><tr><th>Name</th><th>Amount</th><th>Date</th><th>Status</th><th></th></tr></thead>
           <tbody id="investor-tbody">
             <tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No investors logged yet. Click + Add to record one.</td></tr>
           </tbody>
@@ -332,7 +332,7 @@ canvas{width:100%;height:100%}
           <button class="add-btn" onclick="addMentee()">+ Add</button>
         </div>
         <table>
-          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th></tr></thead>
+          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th><th></th></tr></thead>
           <tbody id="mentee-tbody">
             <tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>
           </tbody>
@@ -382,7 +382,7 @@ canvas{width:100%;height:100%}
         <div class="stat-row"><div class="stat-key">Top Country</div><div class="stat-val">🇺🇸 United States</div></div>
         <div class="stat-row"><div class="stat-key">Returning Users</div><div class="stat-val">12</div></div>
         <div class="stat-row"><div class="stat-key">New Users</div><div class="stat-val">123</div></div>
-        <div style="margin-top:1rem;font-family:var(--mono);font-size:.55rem;color:var(--text3)">Source: Google Analytics · Last updated today</div>
+        <div style="margin-top:1rem;font-family:var(--mono);font-size:.55rem;color:var(--text3)">Source: Google Analytics ? Last updated today</div>
       </div>
 
       <!-- ACTIVITY FEED -->
@@ -415,7 +415,7 @@ canvas{width:100%;height:100%}
           <div class="activity-item">
             <div class="activity-dot" style="background:#fff"></div>
             <div class="activity-time">Jun 10</div>
-            <div class="activity-text">Mercury account funded · Wire instructions live</div>
+            <div class="activity-text">Mercury account funded ? Wire instructions live</div>
           </div>
         </div>
       </div>
@@ -426,18 +426,18 @@ canvas{width:100%;height:100%}
       <!-- TRADELOCKER P&L -->
       <div class="panel">
         <div class="panel-title">
-          TradeLocker — Live Account
+          TradeLocker -- Live Account
           <div class="panel-badge" id="tl-status">Connecting...</div>
         </div>
         <div id="tl-data">
-          <div class="stat-row"><div class="stat-key">Balance</div><div class="stat-val" id="tl-balance">—</div></div>
-          <div class="stat-row"><div class="stat-key">Equity</div><div class="stat-val" id="tl-equity">—</div></div>
-          <div class="stat-row"><div class="stat-key">Open P&L</div><div class="stat-val" id="tl-pnl">—</div></div>
-          <div class="stat-row"><div class="stat-key">Margin Used</div><div class="stat-val" id="tl-margin">—</div></div>
-          <div class="stat-row"><div class="stat-key">Free Margin</div><div class="stat-val" id="tl-free">—</div></div>
-          <div class="stat-row"><div class="stat-key">Open Positions</div><div class="stat-val" id="tl-positions">—</div></div>
-          <div class="stat-row"><div class="stat-key">Account</div><div class="stat-val" id="tl-account">—</div></div>
-          <div class="stat-row"><div class="stat-key">Server</div><div class="stat-val">Herofx · Live</div></div>
+          <div class="stat-row"><div class="stat-key">Balance</div><div class="stat-val" id="tl-balance">--</div></div>
+          <div class="stat-row"><div class="stat-key">Equity</div><div class="stat-val" id="tl-equity">--</div></div>
+          <div class="stat-row"><div class="stat-key">Open P&L</div><div class="stat-val" id="tl-pnl">--</div></div>
+          <div class="stat-row"><div class="stat-key">Margin Used</div><div class="stat-val" id="tl-margin">--</div></div>
+          <div class="stat-row"><div class="stat-key">Free Margin</div><div class="stat-val" id="tl-free">--</div></div>
+          <div class="stat-row"><div class="stat-key">Open Positions</div><div class="stat-val" id="tl-positions">--</div></div>
+          <div class="stat-row"><div class="stat-key">Account</div><div class="stat-val" id="tl-account">--</div></div>
+          <div class="stat-row"><div class="stat-key">Server</div><div class="stat-val">Herofx ? Live</div></div>
         </div>
       </div>
 
@@ -460,18 +460,24 @@ canvas{width:100%;height:100%}
 </div>
 
 <script>
-// ── PASSWORDS ──
+// -- PASSWORDS --
 var PASSWORDS = ['AEC2026!', 'Zoogie881!', 'Ascenda$Capital'];
 
 function checkPass() {
-  var pw = document.getElementById('pw-input').value;
+  var pw = document.getElementById('pw-input').value.trim();
+  if(!pw) return;
   if(PASSWORDS.includes(pw)) {
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'flex';
-    document.getElementById('dashboard').style.flexDirection = 'column';
+    var ls = document.getElementById('login-screen');
+    var db = document.getElementById('dashboard');
+    ls.style.display = 'none';
+    db.style.display = 'flex';
+    db.style.flexDirection = 'column';
+    db.style.minHeight = '100vh';
     initDashboard();
   } else {
-    document.getElementById('login-error').style.display = 'block';
+    var err = document.getElementById('login-error');
+    err.style.display = 'block';
+    err.textContent = 'Invalid access code. Try again.';
     document.getElementById('pw-input').value = '';
     document.getElementById('pw-input').focus();
   }
@@ -483,16 +489,16 @@ function logout() {
   document.getElementById('pw-input').value = '';
 }
 
-// ── CLOCK ──
+// -- CLOCK --
 function updateClock() {
   var now = new Date();
   document.getElementById('tb-clock').textContent =
     now.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}) +
-    ' · ' + now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+    ' ? ' + now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
 }
 setInterval(updateClock, 1000);
 
-// ── STATE ──
+// -- STATE --
 var state = {
   investors: [],
   mentees: [],
@@ -513,62 +519,79 @@ function loadState() {
   } catch(e){}
 }
 
-// ── INVESTORS ──
+// -- INVESTORS --
 function addInvestor() {
   var name = prompt('Investor name:');
   if(!name) return;
-  var amount = prompt('Allocation amount ($):');
-  if(!amount) return;
+  var amtStr = prompt('Allocation amount ($):');
+  if(!amtStr) return;
+  var amount = parseFloat(amtStr.replace(/[$,]/g,''));
+  if(isNaN(amount) || amount <= 0) { alert('Invalid amount'); return; }
   var date = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-  state.investors.push({name, amount: parseFloat(amount), date, status:'Active'});
-  state.revenue.investment += parseFloat(amount);
+  state.investors.push({name:name, amount:amount, date:date, status:'Active'});
+  state.revenue.investment += amount;
   saveState();
   renderAll();
+  renderRevenue();
+  renderKPIs();
+}
+
+function deleteInvestor(i) {
+  if(!confirm('Remove ' + state.investors[i].name + ' and deduct $' + state.investors[i].amount.toLocaleString() + ' from revenue?')) return;
+  state.revenue.investment -= state.investors[i].amount;
+  if(state.revenue.investment < 0) state.revenue.investment = 0;
+  state.investors.splice(i, 1);
+  saveState();
+  renderAll();
+  renderRevenue();
+  renderKPIs();
 }
 
 function renderInvestors() {
   var tbody = document.getElementById('investor-tbody');
   if(!state.investors.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No investors logged yet. Click + Add to record one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No investors logged yet. Click + Add to record one.</td></tr>';
     return;
   }
-  tbody.innerHTML = state.investors.map(function(inv) {
-    return '<tr><td class="td-name">'+inv.name+'</td><td class="td-gold">$'+inv.amount.toLocaleString()+'</td><td>'+inv.date+'</td><td class="td-green">'+inv.status+'</td></tr>';
+  tbody.innerHTML = state.investors.map(function(inv, i) {
+    return '<tr>' +
+      '<td class="td-name">' + inv.name + '</td>' +
+      '<td style="color:#e0e0e0;font-family:var(--mono);font-size:.75rem">$' + inv.amount.toLocaleString() + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.72rem;color:var(--text2)">' + inv.date + '</td>' +
+      '<td style="color:#fff;font-family:var(--mono);font-size:.7rem">' + inv.status + '</td>' +
+      '<td><button onclick="deleteInvestor(' + i + ')" style="background:none;border:.5px solid #333;color:#666;font-family:var(--mono);font-size:.55rem;padding:.2rem .45rem;cursor:pointer">x Remove</button></td>' +
+    '</tr>';
   }).join('');
 }
 
-// ── MENTEES ──
-function addMentee() {
-  var name = prompt('Client name:');
-  if(!name) return;
-  var tier = prompt('Tier (Foundation / Accelerator / Elite):') || 'Foundation';
-  var amounts = {Foundation:750, Accelerator:4500, Elite:35000};
-  var amount = amounts[tier] || 750;
-  var date = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-  state.mentees.push({name, tier, amount, date});
-  state.revenue.mentorship += amount;
-  saveState();
-  renderAll();
-}
 
 function renderMentees() {
   var tbody = document.getElementById('mentee-tbody');
   if(!state.mentees.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
     return;
   }
-  tbody.innerHTML = state.mentees.map(function(m) {
-    var color = m.tier === 'Elite' ? 'td-gold' : m.tier === 'Accelerator' ? 'td-blue' : 'td-green';
-    return '<tr><td class="td-name">'+m.name+'</td><td class="'+color+'">'+m.tier+'</td><td class="td-gold">$'+m.amount.toLocaleString()+'</td><td>'+m.date+'</td></tr>';
+  tbody.innerHTML = state.mentees.map(function(m, i) {
+    var color = m.tier === 'Elite' ? '#e0e0e0' : m.tier === 'Accelerator' ? '#bbb' : '#fff';
+    return '<tr>' +
+      '<td class="td-name">' + m.name + '</td>' +
+      '<td style="color:' + color + ';font-family:var(--mono);font-size:.75rem">' + m.tier + '</td>' +
+      '<td style="color:#e0e0e0;font-family:var(--mono);font-size:.75rem">$' + m.amount.toLocaleString() + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.72rem;color:var(--text2)">' + m.date + '</td>' +
+      '<td><button onclick="deleteMentee(' + i + ')" style="background:none;border:.5px solid #333;color:#666;font-family:var(--mono);font-size:.55rem;padding:.2rem .45rem;cursor:pointer">x Remove</button></td>' +
+    '</tr>';
   }).join('');
 }
 
-// ── REVENUE ──
+
+// -- REVENUE --
 function logRevenue() {
   var source = document.getElementById('rev-source').value.trim();
-  var amount = parseFloat(document.getElementById('rev-amount').value);
+  var amtStr = document.getElementById('rev-amount').value.replace(/[$,]/g,'');
+  var amount = parseFloat(amtStr);
   var type = document.getElementById('rev-type').value;
-  if(!source || !amount) return;
+  if(!source) { alert('Please enter a source'); return; }
+  if(isNaN(amount) || amount <= 0) { alert('Please enter a valid amount'); return; }
   state.revenue[type] = (state.revenue[type] || 0) + amount;
   document.getElementById('rev-source').value = '';
   document.getElementById('rev-amount').value = '';
@@ -588,17 +611,17 @@ function renderRevenue() {
   document.getElementById('rb-other-bar').style.width = (state.revenue.other/max*100)+'%';
 }
 
-// ── KPIs ──
+// -- KPIs --
 function renderKPIs() {
   var total = state.revenue.investment + state.revenue.mentorship + state.revenue.other;
   document.getElementById('kpi-revenue').textContent = '$' + total.toLocaleString();
-  document.getElementById('kpi-revenue-badge').textContent = total > 0 ? '↑ Updated' : 'Log revenue below';
+  document.getElementById('kpi-revenue-badge').textContent = total > 0 ? '^ Live' : 'Log revenue below';
   document.getElementById('kpi-revenue-badge').className = 'kpi-badge ' + (total > 0 ? 'up' : 'neu');
   document.getElementById('kpi-investors').textContent = state.investors.length;
   document.getElementById('kpi-mentees').textContent = state.mentees.length;
 }
 
-// ── ACTIVITY ──
+// -- ACTIVITY --
 function addActivity() {
   var text = prompt('Log activity:');
   if(!text) return;
@@ -618,7 +641,7 @@ function renderActivities() {
   feed.innerHTML = extra + feed.innerHTML;
 }
 
-// ── GOALS ──
+// -- GOALS --
 function addGoal() {
   var text = document.getElementById('goal-input').value.trim();
   if(!text) return;
@@ -644,13 +667,13 @@ function renderGoals() {
   }).join('');
 }
 
-// ── NOTES ──
+// -- NOTES --
 function saveNotes() {
   state.notes = document.getElementById('notes-area').value;
   saveState();
 }
 
-// ── TRADELOCKER ──
+// -- TRADELOCKER --
 var TL = {
   baseUrl: 'https://tradelocker-proxy.ascendaenterprise.workers.dev',
   email: 'izaiahcottle0@gmail.com',
@@ -710,8 +733,8 @@ async function tlFetch() {
     document.getElementById('tl-status').style.color = '#fff';
 
     // Update P&L KPI
-    document.getElementById('kpi-pnl').textContent = (pnl>=0?'+$':'−$')+Math.abs(pnl).toFixed(2);
-    document.getElementById('kpi-pnl-badge').textContent = '↑ TradeLocker Live';
+    document.getElementById('kpi-pnl').textContent = (pnl>=0?'+$':'-$')+Math.abs(pnl).toFixed(2);
+    document.getElementById('kpi-pnl-badge').textContent = '^ TradeLocker Live';
     document.getElementById('kpi-pnl-badge').className = 'kpi-badge '+(pnl>=0?'up':'dn');
 
     // Get positions
@@ -726,7 +749,7 @@ async function tlFetch() {
   }
 }
 
-// ── INIT ──
+// -- INIT --
 function renderAll() {
   renderKPIs();
   renderInvestors();
@@ -747,23 +770,23 @@ function getGreeting() {
     "Good morning, Mr. Cottle. The markets open in less than an hour.",
     "Good morning, sir. Another day. Another opportunity to dominate.",
     "Good morning, Mr. Cottle. Most of the world is still asleep. You are already ahead.",
-    "Good morning, sir. The empire doesn't build itself — but with you at the helm, it might as well.",
+    "Good morning, sir. The empire doesn't build itself -- but with you at the helm, it might as well.",
     "Good morning, Mr. Cottle. Your competitors woke up this morning too. The difference is you.",
     "Good morning, sir. The markets await your attention. They always do.",
     "Good morning, Mr. Cottle. Atlanta is quiet. The rest of the world is about to feel your presence.",
     "Good morning, sir. Ascenda Enterprise Capital is live. The world is watching.",
     "Good morning, Mr. Cottle. Today is another chance to make history. Don't waste it.",
-    "Good morning, sir. The kind of discipline you carry — it doesn't go unnoticed.",
+    "Good morning, sir. The kind of discipline you carry -- it doesn't go unnoticed.",
   ];
   var afternoon = [
     "Good afternoon, Mr. Cottle. The markets are moving. So are you.",
     "Good afternoon, sir. Ascenda is watching the markets closely.",
     "Good afternoon, Mr. Cottle. A number of items require your attention.",
     "Good afternoon, sir. The day is far from over. There is still work to be done.",
-    "Good afternoon, Mr. Cottle. Everything you've built — it's already more than most will ever attempt.",
+    "Good afternoon, Mr. Cottle. Everything you've built -- it's already more than most will ever attempt.",
     "Good afternoon, sir. The NQ is moving. I trust you've already seen it.",
     "Good afternoon, Mr. Cottle. Capital deployed. Precision maintained. Carry on.",
-    "Good afternoon, sir. The foundation you're laying right now — this is what legacy looks like.",
+    "Good afternoon, sir. The foundation you're laying right now -- this is what legacy looks like.",
     "Good afternoon, Mr. Cottle. You are not just building a fund. You are building a name.",
     "Good afternoon, sir. It has not gone unnoticed how hard you've been working.",
   ];
@@ -771,7 +794,7 @@ function getGreeting() {
     "Good evening, Mr. Cottle. The markets have closed for the day.",
     "Good evening, sir. A productive day for Ascenda Enterprise Capital.",
     "Good evening, Mr. Cottle. The world continues to move in our favor.",
-    "Good evening, sir. What you accomplished today — most wouldn't attempt in a year.",
+    "Good evening, sir. What you accomplished today -- most wouldn't attempt in a year.",
     "Good evening, Mr. Cottle. The day is done. The work is not. But you already know that.",
     "Good evening, sir. Every decision you made today moved Ascenda forward. That matters.",
     "Good evening, Mr. Cottle. Atlanta to the world. That is where this is headed.",
@@ -782,13 +805,13 @@ function getGreeting() {
   var night = [
     "Still working, Mr. Cottle? The best deals are made after midnight.",
     "Good evening, sir. Most men are asleep. You are not most men.",
-    "Late night, Mr. Cottle. Ascenda never sleeps — and neither do you.",
+    "Late night, Mr. Cottle. Ascenda never sleeps -- and neither do you.",
     "Still here, sir. I wouldn't expect anything less.",
     "The night belongs to those who refuse to stop, Mr. Cottle. You've always known that.",
-    "Late night again, sir. The discipline required to do what you do — it does not go unnoticed.",
+    "Late night again, sir. The discipline required to do what you do -- it does not go unnoticed.",
     "Mr. Cottle. It's late. And you're still building. That is the difference between you and them.",
     "Most have logged off for the night, sir. You never really do.",
-    "The hours you put in when no one is watching — that's what separates Ascenda from everything else.",
+    "The hours you put in when no one is watching -- that's what separates Ascenda from everything else.",
     "Late night, sir. I've prepared everything you need. The rest is yours.",
   ];
 
@@ -807,7 +830,7 @@ function getGreeting() {
 function showGreeting() {
   var overlay = document.createElement('div');
   overlay.id = 'greeting-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;opacity:1;transition:opacity 1.2s ease';
+  overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9990;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;opacity:1;transition:opacity 1.2s ease';
   
   var line1 = document.createElement('div');
   line1.style.cssText = 'font-family:"Playfair Display",Georgia,serif;font-size:clamp(1rem,3vw,1.4rem);font-weight:300;color:rgba(255,255,255,0);letter-spacing:.05em;transition:color 1.5s ease;text-align:center;padding:0 2rem;max-width:600px;line-height:1.6';
@@ -815,7 +838,7 @@ function showGreeting() {
 
   var line2 = document.createElement('div');
   line2.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,0);transition:color 1.8s ease 0.3s';
-  line2.textContent = 'Ascenda Enterprise Capital — Command Center';
+  line2.textContent = 'Ascenda Enterprise Capital -- Command Center';
 
   overlay.appendChild(line1);
   overlay.appendChild(line2);
@@ -833,7 +856,7 @@ function showGreeting() {
     setTimeout(function() {
       overlay.remove();
     }, 1200);
-  }, 6000);
+  }, 4000);
 }
 
 function initDashboard() {
@@ -866,9 +889,9 @@ function initDashboard() {
   <div style="padding:.85rem 1.25rem;border-bottom:.5px solid #222;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
     <div>
       <div style="font-family:'Playfair Display',Georgia,serif;font-size:.85rem;color:#fff">AEC Assistant</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:#444;margin-top:.1rem">Private · Powered by Claude</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:#444;margin-top:.1rem">Private ? Powered by Claude</div>
     </div>
-    <button onclick="toggleChat()" style="background:none;border:none;color:#444;cursor:pointer;font-size:1rem">✕</button>
+    <button onclick="toggleChat()" style="background:none;border:none;color:#444;cursor:pointer;font-size:1rem">x</button>
   </div>
   <div id="aec-chat-messages" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.75rem;min-height:200px;max-height:320px">
     <div style="background:#111;border:.5px solid #222;padding:.75rem;border-radius:2px">
@@ -933,7 +956,7 @@ async function sendChatMsg() {
       body: JSON.stringify({
         model:'claude-sonnet-4-6',
         max_tokens:600,
-        system: 'You are the private AI assistant for Izaiah Cottle, Founder & CEO of Ascenda Enterprise Capital LLC. You are like Alfred to Bruce Wayne — discreet, sharp, and always prepared. You help with fund operations, market analysis, investor relations, mentorship program management, trading strategy, and business decisions. AEC is a multi-strategy investment firm in Atlanta, GA trading NQ, ES, Gold, and top equities. Documented returns: $81.2M, 78% win rate, 32,000+ trades. Be concise, professional, and direct. Address him as Mr. Cottle or sir.',
+        system: 'You are the private AI assistant for Izaiah Cottle, Founder & CEO of Ascenda Enterprise Capital LLC. You are like Alfred to Bruce Wayne -- discreet, sharp, and always prepared. You help with fund operations, market analysis, investor relations, mentorship program management, trading strategy, and business decisions. AEC is a multi-strategy investment firm in Atlanta, GA trading NQ, ES, Gold, and top equities. Documented returns: $81.2M, 78% win rate, 32,000+ trades. Be concise, professional, and direct. Address him as Mr. Cottle or sir.',
         messages: chatHistory
       })
     });

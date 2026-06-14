@@ -362,7 +362,7 @@ canvas{width:100%;height:100%}
         <div style="margin-top:1.5rem">
           <div class="panel-title" style="margin-bottom:.75rem;padding-bottom:.5rem">Log Revenue</div>
           <input class="editable" id="rev-source" placeholder="Source (e.g. John Smith - Foundation)" style="font-size:.78rem;margin-bottom:.5rem;display:block"/>
-          <input class="editable" id="rev-amount" placeholder="Amount (e.g. 750)" type="number" style="font-size:.78rem;margin-bottom:.5rem;display:block"/>
+          <input class="editable" id="rev-amount" placeholder="Amount (e.g. 750 or 4500)" type="text" inputmode="numeric" style="font-size:.78rem;margin-bottom:.5rem;display:block"/>
           <select id="rev-type" style="background:var(--panel2);border:.5px solid var(--border);color:var(--text2);padding:.4rem .6rem;font-family:var(--mono);font-size:.72rem;width:100%;margin-bottom:.75rem;outline:none">
             <option value="investment">Fund Investment</option>
             <option value="mentorship">Mentorship</option>
@@ -515,8 +515,37 @@ function saveState() {
 function loadState() {
   try {
     var s = localStorage.getItem('aec_dash');
-    if(s) state = Object.assign(state, JSON.parse(s));
-  } catch(e){}
+    if(s) {
+      var saved = JSON.parse(s);
+      state = Object.assign(state, saved);
+      // Migrate old investor format
+      state.investors = (state.investors || []).map(function(inv) {
+        return {
+          name: inv.name || inv.firstName || 'Unknown',
+          amount: parseFloat(inv.amount || inv.allocation || 0),
+          date: inv.date || 'N/A',
+          status: inv.status || 'Active'
+        };
+      }).filter(function(inv) { return inv.name && inv.amount > 0; });
+      // Migrate old mentee format
+      state.mentees = (state.mentees || []).map(function(m) {
+        return {
+          name: m.name || 'Unknown',
+          tier: m.tier || 'Foundation',
+          amount: parseFloat(m.amount || 750),
+          date: m.date || 'N/A'
+        };
+      }).filter(function(m) { return m.name; });
+      // Recalculate revenue from actual data
+      var invTotal = state.investors.reduce(function(sum, inv) { return sum + inv.amount; }, 0);
+      var mentTotal = state.mentees.reduce(function(sum, m) { return sum + m.amount; }, 0);
+      if(invTotal > 0) state.revenue.investment = invTotal;
+      if(mentTotal > 0) state.revenue.mentorship = mentTotal;
+    }
+  } catch(e) {
+    console.log('State load error, resetting:', e);
+    localStorage.removeItem('aec_dash');
+  }
 }
 
 // -- INVESTORS --
@@ -587,11 +616,11 @@ function renderMentees() {
 // -- REVENUE --
 function logRevenue() {
   var source = document.getElementById('rev-source').value.trim();
-  var amtStr = document.getElementById('rev-amount').value.replace(/[$,]/g,'');
-  var amount = parseFloat(amtStr);
+  var rawAmt = document.getElementById('rev-amount').value;
+  var amount = parseFloat(String(rawAmt).replace(/[$,\s]/g,''));
   var type = document.getElementById('rev-type').value;
   if(!source) { alert('Please enter a source'); return; }
-  if(isNaN(amount) || amount <= 0) { alert('Please enter a valid amount'); return; }
+  if(!rawAmt || isNaN(amount) || amount <= 0) { alert('Please enter a valid amount (numbers only, e.g. 750)'); return; }
   state.revenue[type] = (state.revenue[type] || 0) + amount;
   document.getElementById('rev-source').value = '';
   document.getElementById('rev-amount').value = '';

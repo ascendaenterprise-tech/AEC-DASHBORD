@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>AEC -- Command Center</title>
+<title>AEC — Command Center</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=EB+Garamond:wght@300;400;500&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet"/>
 <style>
 :root {
@@ -29,7 +29,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--u
 
 /* LOGIN */
 #login-screen {
-  position:fixed;inset:0;background:#000;z-index:10000;
+  position:fixed;inset:0;background:var(--bg);z-index:9999;
   display:flex;align-items:center;justify-content:center;
 }
 .login-box {
@@ -243,19 +243,36 @@ canvas{width:100%;height:100%}
 <body>
 
 <!-- LOGIN -->
-<div id="login-screen" style="display:flex">
+<div id="login-screen">
   <div class="login-box">
     <div class="login-logo">Ascenda Enterprise Capital</div>
     <div class="login-title">Command Center</div>
-    <div class="login-sub">Private access only -- authorized personnel</div>
+    <div class="login-sub">Private access only — authorized personnel</div>
+    <div id="biometric-section" style="display:none;margin-bottom:1rem">
+      <button class="biometric-btn" id="biometric-btn" onclick="biometricLogin()">
+        <span style="font-size:1.2rem">&#x1F511;</span>
+        <span id="biometric-btn-text">Sign in with Face ID</span>
+      </button>
+      <div class="biometric-status" id="biometric-status"></div>
+      <div style="display:flex;align-items:center;gap:.75rem;margin:.85rem 0">
+        <div style="flex:1;height:.5px;background:#1a1a1a"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:#333;letter-spacing:.1em">OR</span>
+        <div style="flex:1;height:.5px;background:#1a1a1a"></div>
+      </div>
+    </div>
     <input class="login-input" type="password" id="pw-input" placeholder="Enter access code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeypress="if(event.key==='Enter')checkPass()"/>
     <button class="login-btn" onclick="checkPass()">Access Dashboard →</button>
+    <div id="register-biometric-wrap" style="display:none;margin-top:.5rem">
+      <button class="biometric-btn" onclick="registerBiometric()" style="font-size:.55rem">
+        <span>+ Register Face ID for this device</span>
+      </button>
+    </div>
     <div class="login-error" id="login-error">Invalid access code. Try again.</div>
   </div>
 </div>
 
 <!-- DASHBOARD -->
-<div id="dashboard" style="display:none">
+<div id="dashboard">
 
   <!-- TOP BAR -->
   <div class="topbar">
@@ -292,12 +309,12 @@ canvas{width:100%;height:100%}
       <div class="kpi-card" style="--accent:var(--gold)">
         <div class="kpi-label">Site Traffic (30d)</div>
         <div class="kpi-val">351</div>
-        <div class="kpi-sub">Views ? 178 active users</div>
-        <div class="kpi-badge up">^ From Google Analytics</div>
+        <div class="kpi-sub">Views · 178 active users</div>
+        <div class="kpi-badge up">↑ From Google Analytics</div>
       </div>
       <div class="kpi-card" style="--accent:var(--green)">
         <div class="kpi-label">Open P&L</div>
-        <div class="kpi-val" id="kpi-pnl">--</div>
+        <div class="kpi-val" id="kpi-pnl">—</div>
         <div class="kpi-sub">Live TradeLocker</div>
         <div class="kpi-badge neu" id="kpi-pnl-badge">Connecting...</div>
       </div>
@@ -318,7 +335,7 @@ canvas{width:100%;height:100%}
           <button class="add-btn" onclick="addInvestor()">+ Add</button>
         </div>
         <table>
-          <thead><tr><th>Name</th><th>Amount</th><th>Date</th><th>Status</th><th></th></tr></thead>
+          <thead><tr><th>Name</th><th>Amount</th><th>Date</th><th>Status</th></tr></thead>
           <tbody id="investor-tbody">
             <tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No investors logged yet. Click + Add to record one.</td></tr>
           </tbody>
@@ -332,7 +349,7 @@ canvas{width:100%;height:100%}
           <button class="add-btn" onclick="addMentee()">+ Add</button>
         </div>
         <table>
-          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th><th></th></tr></thead>
+          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th></tr></thead>
           <tbody id="mentee-tbody">
             <tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>
           </tbody>
@@ -362,7 +379,7 @@ canvas{width:100%;height:100%}
         <div style="margin-top:1.5rem">
           <div class="panel-title" style="margin-bottom:.75rem;padding-bottom:.5rem">Log Revenue</div>
           <input class="editable" id="rev-source" placeholder="Source (e.g. John Smith - Foundation)" style="font-size:.78rem;margin-bottom:.5rem;display:block"/>
-          <input class="editable" id="rev-amount" placeholder="Amount (e.g. 750 or 4500)" type="text" inputmode="numeric" style="font-size:.78rem;margin-bottom:.5rem;display:block"/>
+          <input class="editable" id="rev-amount" placeholder="Amount (e.g. 750)" type="number" style="font-size:.78rem;margin-bottom:.5rem;display:block"/>
           <select id="rev-type" style="background:var(--panel2);border:.5px solid var(--border);color:var(--text2);padding:.4rem .6rem;font-family:var(--mono);font-size:.72rem;width:100%;margin-bottom:.75rem;outline:none">
             <option value="investment">Fund Investment</option>
             <option value="mentorship">Mentorship</option>
@@ -382,7 +399,7 @@ canvas{width:100%;height:100%}
         <div class="stat-row"><div class="stat-key">Top Country</div><div class="stat-val">🇺🇸 United States</div></div>
         <div class="stat-row"><div class="stat-key">Returning Users</div><div class="stat-val">12</div></div>
         <div class="stat-row"><div class="stat-key">New Users</div><div class="stat-val">123</div></div>
-        <div style="margin-top:1rem;font-family:var(--mono);font-size:.55rem;color:var(--text3)">Source: Google Analytics ? Last updated today</div>
+        <div style="margin-top:1rem;font-family:var(--mono);font-size:.55rem;color:var(--text3)">Source: Google Analytics · Last updated today</div>
       </div>
 
       <!-- ACTIVITY FEED -->
@@ -415,7 +432,7 @@ canvas{width:100%;height:100%}
           <div class="activity-item">
             <div class="activity-dot" style="background:#fff"></div>
             <div class="activity-time">Jun 10</div>
-            <div class="activity-text">Mercury account funded ? Wire instructions live</div>
+            <div class="activity-text">Mercury account funded · Wire instructions live</div>
           </div>
         </div>
       </div>
@@ -426,18 +443,18 @@ canvas{width:100%;height:100%}
       <!-- TRADELOCKER P&L -->
       <div class="panel">
         <div class="panel-title">
-          TradeLocker -- Live Account
+          TradeLocker — Live Account
           <div class="panel-badge" id="tl-status">Connecting...</div>
         </div>
         <div id="tl-data">
-          <div class="stat-row"><div class="stat-key">Balance</div><div class="stat-val" id="tl-balance">--</div></div>
-          <div class="stat-row"><div class="stat-key">Equity</div><div class="stat-val" id="tl-equity">--</div></div>
-          <div class="stat-row"><div class="stat-key">Open P&L</div><div class="stat-val" id="tl-pnl">--</div></div>
-          <div class="stat-row"><div class="stat-key">Margin Used</div><div class="stat-val" id="tl-margin">--</div></div>
-          <div class="stat-row"><div class="stat-key">Free Margin</div><div class="stat-val" id="tl-free">--</div></div>
-          <div class="stat-row"><div class="stat-key">Open Positions</div><div class="stat-val" id="tl-positions">--</div></div>
-          <div class="stat-row"><div class="stat-key">Account</div><div class="stat-val" id="tl-account">--</div></div>
-          <div class="stat-row"><div class="stat-key">Server</div><div class="stat-val">Herofx ? Live</div></div>
+          <div class="stat-row"><div class="stat-key">Balance</div><div class="stat-val" id="tl-balance">—</div></div>
+          <div class="stat-row"><div class="stat-key">Equity</div><div class="stat-val" id="tl-equity">—</div></div>
+          <div class="stat-row"><div class="stat-key">Open P&L</div><div class="stat-val" id="tl-pnl">—</div></div>
+          <div class="stat-row"><div class="stat-key">Margin Used</div><div class="stat-val" id="tl-margin">—</div></div>
+          <div class="stat-row"><div class="stat-key">Free Margin</div><div class="stat-val" id="tl-free">—</div></div>
+          <div class="stat-row"><div class="stat-key">Open Positions</div><div class="stat-val" id="tl-positions">—</div></div>
+          <div class="stat-row"><div class="stat-key">Account</div><div class="stat-val" id="tl-account">—</div></div>
+          <div class="stat-row"><div class="stat-key">Server</div><div class="stat-val">Herofx · Live</div></div>
         </div>
       </div>
 
@@ -460,24 +477,18 @@ canvas{width:100%;height:100%}
 </div>
 
 <script>
-// -- PASSWORDS --
+// ── PASSWORDS ──
 var PASSWORDS = ['AEC2026!', 'Zoogie881!', 'Ascenda$Capital'];
 
 function checkPass() {
-  var pw = document.getElementById('pw-input').value.trim();
-  if(!pw) return;
+  var pw = document.getElementById('pw-input').value;
   if(PASSWORDS.includes(pw)) {
-    var ls = document.getElementById('login-screen');
-    var db = document.getElementById('dashboard');
-    ls.style.display = 'none';
-    db.style.display = 'flex';
-    db.style.flexDirection = 'column';
-    db.style.minHeight = '100vh';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'flex';
+    document.getElementById('dashboard').style.flexDirection = 'column';
     initDashboard();
   } else {
-    var err = document.getElementById('login-error');
-    err.style.display = 'block';
-    err.textContent = 'Invalid access code. Try again.';
+    document.getElementById('login-error').style.display = 'block';
     document.getElementById('pw-input').value = '';
     document.getElementById('pw-input').focus();
   }
@@ -489,16 +500,16 @@ function logout() {
   document.getElementById('pw-input').value = '';
 }
 
-// -- CLOCK --
+// ── CLOCK ──
 function updateClock() {
   var now = new Date();
   document.getElementById('tb-clock').textContent =
     now.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}) +
-    ' ? ' + now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+    ' · ' + now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
 }
 setInterval(updateClock, 1000);
 
-// -- STATE --
+// ── STATE ──
 var state = {
   investors: [],
   mentees: [],
@@ -515,112 +526,66 @@ function saveState() {
 function loadState() {
   try {
     var s = localStorage.getItem('aec_dash');
-    if(s) {
-      var saved = JSON.parse(s);
-      state = Object.assign(state, saved);
-      // Migrate old investor format
-      state.investors = (state.investors || []).map(function(inv) {
-        return {
-          name: inv.name || inv.firstName || 'Unknown',
-          amount: parseFloat(inv.amount || inv.allocation || 0),
-          date: inv.date || 'N/A',
-          status: inv.status || 'Active'
-        };
-      }).filter(function(inv) { return inv.name && inv.amount > 0; });
-      // Migrate old mentee format
-      state.mentees = (state.mentees || []).map(function(m) {
-        return {
-          name: m.name || 'Unknown',
-          tier: m.tier || 'Foundation',
-          amount: parseFloat(m.amount || 750),
-          date: m.date || 'N/A'
-        };
-      }).filter(function(m) { return m.name; });
-      // Recalculate revenue from actual data
-      var invTotal = state.investors.reduce(function(sum, inv) { return sum + inv.amount; }, 0);
-      var mentTotal = state.mentees.reduce(function(sum, m) { return sum + m.amount; }, 0);
-      if(invTotal > 0) state.revenue.investment = invTotal;
-      if(mentTotal > 0) state.revenue.mentorship = mentTotal;
-    }
-  } catch(e) {
-    console.log('State load error, resetting:', e);
-    localStorage.removeItem('aec_dash');
-  }
+    if(s) state = Object.assign(state, JSON.parse(s));
+  } catch(e){}
 }
 
-// -- INVESTORS --
+// ── INVESTORS ──
 function addInvestor() {
   var name = prompt('Investor name:');
   if(!name) return;
-  var amtStr = prompt('Allocation amount ($):');
-  if(!amtStr) return;
-  var amount = parseFloat(amtStr.replace(/[$,]/g,''));
-  if(isNaN(amount) || amount <= 0) { alert('Invalid amount'); return; }
+  var amount = prompt('Allocation amount ($):');
+  if(!amount) return;
   var date = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-  state.investors.push({name:name, amount:amount, date:date, status:'Active'});
-  state.revenue.investment += amount;
+  state.investors.push({name, amount: parseFloat(amount), date, status:'Active'});
+  state.revenue.investment += parseFloat(amount);
   saveState();
   renderAll();
-  renderRevenue();
-  renderKPIs();
-}
-
-function deleteInvestor(i) {
-  if(!confirm('Remove ' + state.investors[i].name + ' and deduct $' + state.investors[i].amount.toLocaleString() + ' from revenue?')) return;
-  state.revenue.investment -= state.investors[i].amount;
-  if(state.revenue.investment < 0) state.revenue.investment = 0;
-  state.investors.splice(i, 1);
-  saveState();
-  renderAll();
-  renderRevenue();
-  renderKPIs();
 }
 
 function renderInvestors() {
   var tbody = document.getElementById('investor-tbody');
   if(!state.investors.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No investors logged yet. Click + Add to record one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No investors logged yet. Click + Add to record one.</td></tr>';
     return;
   }
-  tbody.innerHTML = state.investors.map(function(inv, i) {
-    return '<tr>' +
-      '<td class="td-name">' + inv.name + '</td>' +
-      '<td style="color:#e0e0e0;font-family:var(--mono);font-size:.75rem">$' + inv.amount.toLocaleString() + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.72rem;color:var(--text2)">' + inv.date + '</td>' +
-      '<td style="color:#fff;font-family:var(--mono);font-size:.7rem">' + inv.status + '</td>' +
-      '<td><button onclick="deleteInvestor(' + i + ')" style="background:none;border:.5px solid #333;color:#666;font-family:var(--mono);font-size:.55rem;padding:.2rem .45rem;cursor:pointer">x Remove</button></td>' +
-    '</tr>';
+  tbody.innerHTML = state.investors.map(function(inv) {
+    return '<tr><td class="td-name">'+inv.name+'</td><td class="td-gold">$'+inv.amount.toLocaleString()+'</td><td>'+inv.date+'</td><td class="td-green">'+inv.status+'</td></tr>';
   }).join('');
 }
 
+// ── MENTEES ──
+function addMentee() {
+  var name = prompt('Client name:');
+  if(!name) return;
+  var tier = prompt('Tier (Foundation / Accelerator / Elite):') || 'Foundation';
+  var amounts = {Foundation:750, Accelerator:4500, Elite:35000};
+  var amount = amounts[tier] || 750;
+  var date = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+  state.mentees.push({name, tier, amount, date});
+  state.revenue.mentorship += amount;
+  saveState();
+  renderAll();
+}
 
 function renderMentees() {
   var tbody = document.getElementById('mentee-tbody');
   if(!state.mentees.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
     return;
   }
-  tbody.innerHTML = state.mentees.map(function(m, i) {
-    var color = m.tier === 'Elite' ? '#e0e0e0' : m.tier === 'Accelerator' ? '#bbb' : '#fff';
-    return '<tr>' +
-      '<td class="td-name">' + m.name + '</td>' +
-      '<td style="color:' + color + ';font-family:var(--mono);font-size:.75rem">' + m.tier + '</td>' +
-      '<td style="color:#e0e0e0;font-family:var(--mono);font-size:.75rem">$' + m.amount.toLocaleString() + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.72rem;color:var(--text2)">' + m.date + '</td>' +
-      '<td><button onclick="deleteMentee(' + i + ')" style="background:none;border:.5px solid #333;color:#666;font-family:var(--mono);font-size:.55rem;padding:.2rem .45rem;cursor:pointer">x Remove</button></td>' +
-    '</tr>';
+  tbody.innerHTML = state.mentees.map(function(m) {
+    var color = m.tier === 'Elite' ? 'td-gold' : m.tier === 'Accelerator' ? 'td-blue' : 'td-green';
+    return '<tr><td class="td-name">'+m.name+'</td><td class="'+color+'">'+m.tier+'</td><td class="td-gold">$'+m.amount.toLocaleString()+'</td><td>'+m.date+'</td></tr>';
   }).join('');
 }
 
-
-// -- REVENUE --
+// ── REVENUE ──
 function logRevenue() {
   var source = document.getElementById('rev-source').value.trim();
-  var rawAmt = document.getElementById('rev-amount').value;
-  var amount = parseFloat(String(rawAmt).replace(/[$,\s]/g,''));
+  var amount = parseFloat(document.getElementById('rev-amount').value);
   var type = document.getElementById('rev-type').value;
-  if(!source) { alert('Please enter a source'); return; }
-  if(!rawAmt || isNaN(amount) || amount <= 0) { alert('Please enter a valid amount (numbers only, e.g. 750)'); return; }
+  if(!source || !amount) return;
   state.revenue[type] = (state.revenue[type] || 0) + amount;
   document.getElementById('rev-source').value = '';
   document.getElementById('rev-amount').value = '';
@@ -640,17 +605,17 @@ function renderRevenue() {
   document.getElementById('rb-other-bar').style.width = (state.revenue.other/max*100)+'%';
 }
 
-// -- KPIs --
+// ── KPIs ──
 function renderKPIs() {
   var total = state.revenue.investment + state.revenue.mentorship + state.revenue.other;
   document.getElementById('kpi-revenue').textContent = '$' + total.toLocaleString();
-  document.getElementById('kpi-revenue-badge').textContent = total > 0 ? '^ Live' : 'Log revenue below';
+  document.getElementById('kpi-revenue-badge').textContent = total > 0 ? '↑ Updated' : 'Log revenue below';
   document.getElementById('kpi-revenue-badge').className = 'kpi-badge ' + (total > 0 ? 'up' : 'neu');
   document.getElementById('kpi-investors').textContent = state.investors.length;
   document.getElementById('kpi-mentees').textContent = state.mentees.length;
 }
 
-// -- ACTIVITY --
+// ── ACTIVITY ──
 function addActivity() {
   var text = prompt('Log activity:');
   if(!text) return;
@@ -670,7 +635,7 @@ function renderActivities() {
   feed.innerHTML = extra + feed.innerHTML;
 }
 
-// -- GOALS --
+// ── GOALS ──
 function addGoal() {
   var text = document.getElementById('goal-input').value.trim();
   if(!text) return;
@@ -696,13 +661,13 @@ function renderGoals() {
   }).join('');
 }
 
-// -- NOTES --
+// ── NOTES ──
 function saveNotes() {
   state.notes = document.getElementById('notes-area').value;
   saveState();
 }
 
-// -- TRADELOCKER --
+// ── TRADELOCKER ──
 var TL = {
   baseUrl: 'https://tradelocker-proxy.ascendaenterprise.workers.dev',
   email: 'izaiahcottle0@gmail.com',
@@ -762,8 +727,8 @@ async function tlFetch() {
     document.getElementById('tl-status').style.color = '#fff';
 
     // Update P&L KPI
-    document.getElementById('kpi-pnl').textContent = (pnl>=0?'+$':'-$')+Math.abs(pnl).toFixed(2);
-    document.getElementById('kpi-pnl-badge').textContent = '^ TradeLocker Live';
+    document.getElementById('kpi-pnl').textContent = (pnl>=0?'+$':'−$')+Math.abs(pnl).toFixed(2);
+    document.getElementById('kpi-pnl-badge').textContent = '↑ TradeLocker Live';
     document.getElementById('kpi-pnl-badge').className = 'kpi-badge '+(pnl>=0?'up':'dn');
 
     // Get positions
@@ -778,7 +743,7 @@ async function tlFetch() {
   }
 }
 
-// -- INIT --
+// ── INIT ──
 function renderAll() {
   renderKPIs();
   renderInvestors();
@@ -799,23 +764,23 @@ function getGreeting() {
     "Good morning, Mr. Cottle. The markets open in less than an hour.",
     "Good morning, sir. Another day. Another opportunity to dominate.",
     "Good morning, Mr. Cottle. Most of the world is still asleep. You are already ahead.",
-    "Good morning, sir. The empire doesn't build itself -- but with you at the helm, it might as well.",
+    "Good morning, sir. The empire doesn't build itself — but with you at the helm, it might as well.",
     "Good morning, Mr. Cottle. Your competitors woke up this morning too. The difference is you.",
     "Good morning, sir. The markets await your attention. They always do.",
     "Good morning, Mr. Cottle. Atlanta is quiet. The rest of the world is about to feel your presence.",
     "Good morning, sir. Ascenda Enterprise Capital is live. The world is watching.",
     "Good morning, Mr. Cottle. Today is another chance to make history. Don't waste it.",
-    "Good morning, sir. The kind of discipline you carry -- it doesn't go unnoticed.",
+    "Good morning, sir. The kind of discipline you carry — it doesn't go unnoticed.",
   ];
   var afternoon = [
     "Good afternoon, Mr. Cottle. The markets are moving. So are you.",
     "Good afternoon, sir. Ascenda is watching the markets closely.",
     "Good afternoon, Mr. Cottle. A number of items require your attention.",
     "Good afternoon, sir. The day is far from over. There is still work to be done.",
-    "Good afternoon, Mr. Cottle. Everything you've built -- it's already more than most will ever attempt.",
+    "Good afternoon, Mr. Cottle. Everything you've built — it's already more than most will ever attempt.",
     "Good afternoon, sir. The NQ is moving. I trust you've already seen it.",
     "Good afternoon, Mr. Cottle. Capital deployed. Precision maintained. Carry on.",
-    "Good afternoon, sir. The foundation you're laying right now -- this is what legacy looks like.",
+    "Good afternoon, sir. The foundation you're laying right now — this is what legacy looks like.",
     "Good afternoon, Mr. Cottle. You are not just building a fund. You are building a name.",
     "Good afternoon, sir. It has not gone unnoticed how hard you've been working.",
   ];
@@ -823,7 +788,7 @@ function getGreeting() {
     "Good evening, Mr. Cottle. The markets have closed for the day.",
     "Good evening, sir. A productive day for Ascenda Enterprise Capital.",
     "Good evening, Mr. Cottle. The world continues to move in our favor.",
-    "Good evening, sir. What you accomplished today -- most wouldn't attempt in a year.",
+    "Good evening, sir. What you accomplished today — most wouldn't attempt in a year.",
     "Good evening, Mr. Cottle. The day is done. The work is not. But you already know that.",
     "Good evening, sir. Every decision you made today moved Ascenda forward. That matters.",
     "Good evening, Mr. Cottle. Atlanta to the world. That is where this is headed.",
@@ -834,13 +799,13 @@ function getGreeting() {
   var night = [
     "Still working, Mr. Cottle? The best deals are made after midnight.",
     "Good evening, sir. Most men are asleep. You are not most men.",
-    "Late night, Mr. Cottle. Ascenda never sleeps -- and neither do you.",
+    "Late night, Mr. Cottle. Ascenda never sleeps — and neither do you.",
     "Still here, sir. I wouldn't expect anything less.",
     "The night belongs to those who refuse to stop, Mr. Cottle. You've always known that.",
-    "Late night again, sir. The discipline required to do what you do -- it does not go unnoticed.",
+    "Late night again, sir. The discipline required to do what you do — it does not go unnoticed.",
     "Mr. Cottle. It's late. And you're still building. That is the difference between you and them.",
     "Most have logged off for the night, sir. You never really do.",
-    "The hours you put in when no one is watching -- that's what separates Ascenda from everything else.",
+    "The hours you put in when no one is watching — that's what separates Ascenda from everything else.",
     "Late night, sir. I've prepared everything you need. The rest is yours.",
   ];
 
@@ -859,7 +824,7 @@ function getGreeting() {
 function showGreeting() {
   var overlay = document.createElement('div');
   overlay.id = 'greeting-overlay';
-  overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9990;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;opacity:1;transition:opacity 1.2s ease';
+  overlay.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9998;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1.5rem;opacity:1;transition:opacity 1.2s ease';
   
   var line1 = document.createElement('div');
   line1.style.cssText = 'font-family:"Playfair Display",Georgia,serif;font-size:clamp(1rem,3vw,1.4rem);font-weight:300;color:rgba(255,255,255,0);letter-spacing:.05em;transition:color 1.5s ease;text-align:center;padding:0 2rem;max-width:600px;line-height:1.6';
@@ -867,7 +832,7 @@ function showGreeting() {
 
   var line2 = document.createElement('div');
   line2.style.cssText = 'font-family:"JetBrains Mono",monospace;font-size:.58rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,0);transition:color 1.8s ease 0.3s';
-  line2.textContent = 'Ascenda Enterprise Capital -- Command Center';
+  line2.textContent = 'Ascenda Enterprise Capital — Command Center';
 
   overlay.appendChild(line1);
   overlay.appendChild(line2);
@@ -885,7 +850,7 @@ function showGreeting() {
     setTimeout(function() {
       overlay.remove();
     }, 1200);
-  }, 4000);
+  }, 6000);
 }
 
 function initDashboard() {
@@ -897,107 +862,172 @@ function initDashboard() {
   showGreeting();
   setTimeout(tlConnect, 3500);
 }
-</script>
-<!-- AEC AI ASSISTANT -->
-<div id="aec-chat-bubble" onclick="toggleChat()" style="
-  position:fixed;bottom:2rem;right:2rem;width:52px;height:52px;
-  background:#fff;border-radius:50%;display:flex;align-items:center;
-  justify-content:center;cursor:pointer;z-index:9000;
-  box-shadow:0 4px 24px rgba(0,0,0,0.5);transition:transform .2s;
-  font-size:1.2rem;
-" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">💬</div>
 
-<div id="aec-chat-panel" style="
-  display:none;position:fixed;bottom:5.5rem;right:2rem;
-  width:360px;max-width:calc(100vw - 2rem);
-  background:#0a0a0a;border:.5px solid #222;
-  z-index:9001;flex-direction:column;
-  box-shadow:0 8px 40px rgba(0,0,0,0.7);
-  max-height:500px;
-">
-  <div style="padding:.85rem 1.25rem;border-bottom:.5px solid #222;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
-    <div>
-      <div style="font-family:'Playfair Display',Georgia,serif;font-size:.85rem;color:#fff">AEC Assistant</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:#444;margin-top:.1rem">Private ? Powered by Claude</div>
-    </div>
-    <button onclick="toggleChat()" style="background:none;border:none;color:#444;cursor:pointer;font-size:1rem">x</button>
-  </div>
-  <div id="aec-chat-messages" style="flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:.75rem;min-height:200px;max-height:320px">
-    <div style="background:#111;border:.5px solid #222;padding:.75rem;border-radius:2px">
-      <div style="font-family:'JetBrains Mono',monospace;font-size:.58rem;color:#666;margin-bottom:.3rem">AEC Assistant</div>
-      <div style="font-size:.8rem;color:#ccc;line-height:1.6">Good evening, Mr. Cottle. I'm your private AEC assistant. Ask me anything about your fund, markets, strategy, or operations.</div>
-    </div>
-  </div>
-  <div style="padding:.75rem;border-top:.5px solid #222;display:flex;gap:.5rem;flex-shrink:0">
-    <input id="aec-chat-input" placeholder="Ask anything..." style="
-      flex:1;background:#111;border:.5px solid #222;color:#fff;
-      font-family:'JetBrains Mono',monospace;font-size:.75rem;
-      padding:.6rem .85rem;outline:none;transition:border-color .2s;
-    " onfocus="this.style.borderColor='#555'" onblur="this.style.borderColor='#222'"
-    onkeypress="if(event.key==='Enter')sendChatMsg()"/>
-    <button onclick="sendChatMsg()" style="
-      background:#fff;color:#000;border:none;
-      font-family:'JetBrains Mono',monospace;font-size:.6rem;
-      font-weight:700;padding:.6rem 1rem;cursor:pointer;
-      transition:background .2s;white-space:nowrap;
-    " onmouseover="this.style.background='#ddd'" onmouseout="this.style.background='#fff'">Send</button>
-  </div>
-</div>
+// ── WEBAUTHN / FACE ID ──
+var WEBAUTHN_RP_ID = window.location.hostname || 'ascendaenterprisecapital.com';
+var WEBAUTHN_KEY = 'aec_webauthn_credential';
 
-<script>
-function toggleChat() {
-  var panel = document.getElementById('aec-chat-panel');
-  var isOpen = panel.style.display === 'flex';
-  panel.style.display = isOpen ? 'none' : 'flex';
-  panel.style.flexDirection = 'column';
-  if(!isOpen) document.getElementById('aec-chat-input').focus();
+function bufferToBase64(buffer) {
+  return btoa(String.fromCharCode(...new Uint8Array(buffer)));
 }
 
-var chatHistory = [];
+function base64ToBuffer(base64) {
+  var binary = atob(base64);
+  var bytes = new Uint8Array(binary.length);
+  for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
 
-async function sendChatMsg() {
-  var input = document.getElementById('aec-chat-input');
-  var msg = input.value.trim();
-  if(!msg) return;
-  input.value = '';
+function isWebAuthnAvailable() {
+  return window.PublicKeyCredential !== undefined && 
+         typeof window.PublicKeyCredential === 'function';
+}
 
-  var messages = document.getElementById('aec-chat-messages');
-
-  // User message
-  var userDiv = document.createElement('div');
-  userDiv.style.cssText = 'background:#161616;border:.5px solid #222;padding:.75rem;border-radius:2px;align-self:flex-end;max-width:85%';
-  userDiv.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.58rem;color:#666;margin-bottom:.3rem">You</div><div style="font-size:.8rem;color:#fff;line-height:1.6">'+msg+'</div>';
-  messages.appendChild(userDiv);
-
-  // Thinking indicator
-  var thinkDiv = document.createElement('div');
-  thinkDiv.style.cssText = 'background:#111;border:.5px solid #222;padding:.75rem;border-radius:2px';
-  thinkDiv.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.58rem;color:#666;margin-bottom:.3rem">AEC Assistant</div><div style="font-size:.8rem;color:#555;line-height:1.6">Thinking...</div>';
-  messages.appendChild(thinkDiv);
-  messages.scrollTop = messages.scrollHeight;
-
-  chatHistory.push({role:'user', content: msg});
-
+async function checkBiometricAvailable() {
+  if (!isWebAuthnAvailable()) return false;
   try {
-    var res = await fetch('https://aec-chat-proxy.ascendaenterprise.workers.dev/', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:600,
-        system: 'You are the private AI assistant for Izaiah Cottle, Founder & CEO of Ascenda Enterprise Capital LLC. You are like Alfred to Bruce Wayne -- discreet, sharp, and always prepared. You help with fund operations, market analysis, investor relations, mentorship program management, trading strategy, and business decisions. AEC is a multi-strategy investment firm in Atlanta, GA trading NQ, ES, Gold, and top equities. Documented returns: $81.2M, 78% win rate, 32,000+ trades. Be concise, professional, and direct. Address him as Mr. Cottle or sir.',
-        messages: chatHistory
-      })
-    });
-    var j = await res.json();
-    var reply = j.content && j.content[0] ? j.content[0].text : 'I apologize, sir. I was unable to process that request.';
-    chatHistory.push({role:'assistant', content: reply});
-    thinkDiv.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.58rem;color:#666;margin-bottom:.3rem">AEC Assistant</div><div style="font-size:.8rem;color:#ccc;line-height:1.6">'+reply.replace(/\n/g,'<br>')+'</div>';
-  } catch(e) {
-    thinkDiv.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.58rem;color:#666;margin-bottom:.3rem">AEC Assistant</div><div style="font-size:.8rem;color:#555;line-height:1.6">Connection error, sir. Please try again.</div>';
-  }
-  messages.scrollTop = messages.scrollHeight;
+    var available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    return available;
+  } catch(e) { return false; }
 }
+
+async function initBiometric() {
+  var available = await checkBiometricAvailable();
+  if (!available) return;
+  
+  var stored = localStorage.getItem(WEBAUTHN_KEY);
+  var section = document.getElementById('biometric-section');
+  var regWrap = document.getElementById('register-biometric-wrap');
+  
+  if (stored) {
+    // Credential registered — show Face ID button
+    section.style.display = 'block';
+    document.getElementById('biometric-btn-text').textContent = 'Sign in with Face ID';
+    document.getElementById('biometric-status').textContent = 'Biometric credential registered on this device';
+  } else {
+    // Not registered yet — show register option after password login
+    regWrap.style.display = 'block';
+  }
+}
+
+async function registerBiometric() {
+  if (!isWebAuthnAvailable()) {
+    alert('WebAuthn not supported on this browser.');
+    return;
+  }
+  
+  var status = document.getElementById('biometric-status');
+  
+  try {
+    var challenge = new Uint8Array(32);
+    crypto.getRandomValues(challenge);
+    
+    var userId = new Uint8Array(16);
+    crypto.getRandomValues(userId);
+    
+    var credential = await navigator.credentials.create({
+      publicKey: {
+        challenge: challenge,
+        rp: { name: 'AEC Command Center', id: WEBAUTHN_RP_ID },
+        user: { id: userId, name: 'izaiah@ascendaenterprisecapital.com', displayName: 'Izaiah Cottle' },
+        pubKeyCredParams: [{ alg: -7, type: 'public-key' }, { alg: -257, type: 'public-key' }],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+          userVerification: 'required',
+          requireResidentKey: false
+        },
+        timeout: 60000,
+        attestation: 'none'
+      }
+    });
+    
+    // Store credential ID
+    var credData = {
+      id: bufferToBase64(credential.rawId),
+      type: credential.type
+    };
+    localStorage.setItem(WEBAUTHN_KEY, JSON.stringify(credData));
+    
+    // Show biometric section
+    document.getElementById('biometric-section').style.display = 'block';
+    document.getElementById('register-biometric-wrap').style.display = 'none';
+    document.getElementById('biometric-btn-text').textContent = 'Sign in with Face ID';
+    document.getElementById('biometric-status').textContent = 'Face ID registered successfully';
+    
+  } catch(e) {
+    console.error('Registration error:', e);
+    if (e.name === 'NotAllowedError') {
+      document.getElementById('biometric-status').textContent = 'Registration cancelled.';
+    } else {
+      document.getElementById('biometric-status').textContent = 'Registration failed: ' + e.message;
+    }
+  }
+}
+
+async function biometricLogin() {
+  var stored = localStorage.getItem(WEBAUTHN_KEY);
+  if (!stored) { registerBiometric(); return; }
+  
+  var credData = JSON.parse(stored);
+  var status = document.getElementById('biometric-status');
+  status.textContent = 'Waiting for biometric...';
+  
+  try {
+    var challenge = new Uint8Array(32);
+    crypto.getRandomValues(challenge);
+    
+    var assertion = await navigator.credentials.get({
+      publicKey: {
+        challenge: challenge,
+        rpId: WEBAUTHN_RP_ID,
+        allowCredentials: [{ id: base64ToBuffer(credData.id), type: 'public-key' }],
+        userVerification: 'required',
+        timeout: 60000
+      }
+    });
+    
+    // Auth successful — unlock dashboard
+    status.textContent = 'Authenticated.';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'flex';
+    document.getElementById('dashboard').style.flexDirection = 'column';
+    document.getElementById('dashboard').style.minHeight = '100vh';
+    initDashboard();
+    setTimeout(showRegisterBiometricAfterLogin, 2000);
+    
+  } catch(e) {
+    if (e.name === 'NotAllowedError') {
+      status.textContent = 'Authentication cancelled or failed.';
+    } else {
+      status.textContent = 'Error: ' + e.message;
+    }
+  }
+}
+
+// Show register option after successful password login
+function showRegisterBiometricAfterLogin() {
+  checkBiometricAvailable().then(function(available) {
+    if (!available) return;
+    if (localStorage.getItem(WEBAUTHN_KEY)) return;
+    // Show a toast
+    var toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:5rem;right:1.5rem;background:#111;border:.5px solid #333;padding:1rem 1.25rem;z-index:9000;max-width:280px;';
+    toast.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.6rem;color:#fff;font-weight:700;margin-bottom:.4rem">Register Face ID?</div>' +
+      '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.58rem;color:#666;margin-bottom:.75rem">Login faster next time with biometrics</div>' +
+      '<button onclick="registerBiometric();this.parentElement.remove()" style="background:#fff;color:#000;border:none;font-family:\'JetBrains Mono\',monospace;font-size:.55rem;font-weight:700;letter-spacing:.1em;padding:.5rem 1rem;cursor:pointer;margin-right:.5rem">Register</button>' +
+      '<button onclick="this.parentElement.remove()" style="background:transparent;border:.5px solid #333;color:#666;font-family:\'JetBrains Mono\',monospace;font-size:.55rem;padding:.5rem .75rem;cursor:pointer">Not now</button>';
+    document.body.appendChild(toast);
+    setTimeout(function() { if(toast.parentElement) toast.remove(); }, 8000);
+  });
+}
+
+// Init biometric on page load
+window.addEventListener('load', function() {
+  var pw = document.getElementById('pw-input');
+  if(pw) { pw.value = ''; pw.focus(); }
+  initBiometric();
+});
+
 </script>
 </body>
 </html>

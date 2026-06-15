@@ -349,7 +349,7 @@ canvas{width:100%;height:100%}
           <button class="add-btn" onclick="addMentee()">+ Add</button>
         </div>
         <table>
-          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th></tr></thead>
+          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th><th></th></tr></thead>
           <tbody id="mentee-tbody">
             <tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>
           </tbody>
@@ -558,25 +558,46 @@ function renderInvestors() {
 function addMentee() {
   var name = prompt('Client name:');
   if(!name) return;
-  var tier = prompt('Tier (Foundation / Accelerator / Elite):') || 'Foundation';
-  var amounts = {Foundation:750, Accelerator:4500, Elite:35000};
-  var amount = amounts[tier] || 750;
+  var tierInput = prompt('Tier:\n1 = Foundation ($750)\n2 = Accelerator ($4,500)\n3 = Elite ($35,000)') || '1';
+  var tierMap = {'1':'Foundation','2':'Accelerator','3':'Elite','Foundation':'Foundation','Accelerator':'Accelerator','Elite':'Elite'};
+  var amtMap = {'Foundation':750,'Accelerator':4500,'Elite':35000};
+  var tier = tierMap[tierInput.trim()] || 'Foundation';
+  var amount = amtMap[tier];
   var date = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-  state.mentees.push({name, tier, amount, date});
+  state.mentees.push({name:name, tier:tier, amount:amount, date:date});
   state.revenue.mentorship += amount;
   saveState();
   renderAll();
+  renderRevenue();
+  renderKPIs();
+}
+
+function deleteMentee(i) {
+  if(!confirm('Remove ' + state.mentees[i].name + ' and deduct $' + state.mentees[i].amount.toLocaleString() + ' from revenue?')) return;
+  state.revenue.mentorship -= state.mentees[i].amount;
+  if(state.revenue.mentorship < 0) state.revenue.mentorship = 0;
+  state.mentees.splice(i, 1);
+  saveState();
+  renderAll();
+  renderRevenue();
+  renderKPIs();
 }
 
 function renderMentees() {
   var tbody = document.getElementById('mentee-tbody');
   if(!state.mentees.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
     return;
   }
-  tbody.innerHTML = state.mentees.map(function(m) {
-    var color = m.tier === 'Elite' ? 'td-gold' : m.tier === 'Accelerator' ? 'td-blue' : 'td-green';
-    return '<tr><td class="td-name">'+m.name+'</td><td class="'+color+'">'+m.tier+'</td><td class="td-gold">$'+m.amount.toLocaleString()+'</td><td>'+m.date+'</td></tr>';
+  tbody.innerHTML = state.mentees.map(function(m, i) {
+    var color = m.tier === 'Elite' ? '#e0e0e0' : m.tier === 'Accelerator' ? '#bbb' : '#fff';
+    return '<tr>' +
+      '<td class="td-name">' + m.name + '</td>' +
+      '<td style="color:' + color + ';font-family:var(--mono);font-size:.75rem">' + m.tier + '</td>' +
+      '<td style="color:#e0e0e0;font-family:var(--mono);font-size:.75rem">$' + m.amount.toLocaleString() + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.72rem;color:var(--text2)">' + m.date + '</td>' +
+      '<td><button onclick="deleteMentee(' + i + ')" style="background:none;border:.5px solid #333;color:#666;font-family:var(--mono);font-size:.55rem;padding:.2rem .45rem;cursor:pointer">x Remove</button></td>' +
+    '</tr>';
   }).join('');
 }
 

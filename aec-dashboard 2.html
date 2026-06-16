@@ -248,8 +248,25 @@ canvas{width:100%;height:100%}
     <div class="login-logo">Ascenda Enterprise Capital</div>
     <div class="login-title">Command Center</div>
     <div class="login-sub">Private access only — authorized personnel</div>
+    <div id="biometric-section" style="display:none;margin-bottom:1rem">
+      <button class="biometric-btn" id="biometric-btn" onclick="biometricLogin()">
+        <span style="font-size:1.2rem">&#x1F511;</span>
+        <span id="biometric-btn-text">Sign in with Face ID</span>
+      </button>
+      <div class="biometric-status" id="biometric-status"></div>
+      <div style="display:flex;align-items:center;gap:.75rem;margin:.85rem 0">
+        <div style="flex:1;height:.5px;background:#1a1a1a"></div>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:#333;letter-spacing:.1em">OR</span>
+        <div style="flex:1;height:.5px;background:#1a1a1a"></div>
+      </div>
+    </div>
     <input class="login-input" type="password" id="pw-input" placeholder="Enter access code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeypress="if(event.key==='Enter')checkPass()"/>
     <button class="login-btn" onclick="checkPass()">Access Dashboard →</button>
+    <div id="register-biometric-wrap" style="display:none;margin-top:.5rem">
+      <button class="biometric-btn" onclick="registerBiometric()" style="font-size:.55rem">
+        <span>+ Register Face ID for this device</span>
+      </button>
+    </div>
     <div class="login-error" id="login-error">Invalid access code. Try again.</div>
   </div>
 </div>
@@ -332,7 +349,7 @@ canvas{width:100%;height:100%}
           <button class="add-btn" onclick="addMentee()">+ Add</button>
         </div>
         <table>
-          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th></tr></thead>
+          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th><th></th></tr></thead>
           <tbody id="mentee-tbody">
             <tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>
           </tbody>
@@ -541,25 +558,46 @@ function renderInvestors() {
 function addMentee() {
   var name = prompt('Client name:');
   if(!name) return;
-  var tier = prompt('Tier (Foundation / Accelerator / Elite):') || 'Foundation';
-  var amounts = {Foundation:750, Accelerator:4500, Elite:35000};
-  var amount = amounts[tier] || 750;
+  var tierInput = prompt('Tier:\n1 = Foundation ($750)\n2 = Accelerator ($4,500)\n3 = Elite ($35,000)') || '1';
+  var tierMap = {'1':'Foundation','2':'Accelerator','3':'Elite','Foundation':'Foundation','Accelerator':'Accelerator','Elite':'Elite'};
+  var amtMap = {'Foundation':750,'Accelerator':4500,'Elite':35000};
+  var tier = tierMap[tierInput.trim()] || 'Foundation';
+  var amount = amtMap[tier];
   var date = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-  state.mentees.push({name, tier, amount, date});
+  state.mentees.push({name:name, tier:tier, amount:amount, date:date});
   state.revenue.mentorship += amount;
   saveState();
   renderAll();
+  renderRevenue();
+  renderKPIs();
+}
+
+function deleteMentee(i) {
+  if(!confirm('Remove ' + state.mentees[i].name + ' and deduct $' + state.mentees[i].amount.toLocaleString() + ' from revenue?')) return;
+  state.revenue.mentorship -= state.mentees[i].amount;
+  if(state.revenue.mentorship < 0) state.revenue.mentorship = 0;
+  state.mentees.splice(i, 1);
+  saveState();
+  renderAll();
+  renderRevenue();
+  renderKPIs();
 }
 
 function renderMentees() {
   var tbody = document.getElementById('mentee-tbody');
   if(!state.mentees.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
     return;
   }
-  tbody.innerHTML = state.mentees.map(function(m) {
-    var color = m.tier === 'Elite' ? 'td-gold' : m.tier === 'Accelerator' ? 'td-blue' : 'td-green';
-    return '<tr><td class="td-name">'+m.name+'</td><td class="'+color+'">'+m.tier+'</td><td class="td-gold">$'+m.amount.toLocaleString()+'</td><td>'+m.date+'</td></tr>';
+  tbody.innerHTML = state.mentees.map(function(m, i) {
+    var color = m.tier === 'Elite' ? '#e0e0e0' : m.tier === 'Accelerator' ? '#bbb' : '#fff';
+    return '<tr>' +
+      '<td class="td-name">' + m.name + '</td>' +
+      '<td style="color:' + color + ';font-family:var(--mono);font-size:.75rem">' + m.tier + '</td>' +
+      '<td style="color:#e0e0e0;font-family:var(--mono);font-size:.75rem">$' + m.amount.toLocaleString() + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.72rem;color:var(--text2)">' + m.date + '</td>' +
+      '<td><button onclick="deleteMentee(' + i + ')" style="background:none;border:.5px solid #333;color:#666;font-family:var(--mono);font-size:.55rem;padding:.2rem .45rem;cursor:pointer">x Remove</button></td>' +
+    '</tr>';
   }).join('');
 }
 
@@ -654,7 +692,7 @@ function saveNotes() {
 var TL = {
   baseUrl: 'https://tradelocker-proxy.ascendaenterprise.workers.dev',
   email: 'izaiahcottle0@gmail.com',
-  password: '881891Ic$',
+  password: '[REDACTED]$',
   server: 'Herofx',
   accessToken: null,
   accountId: null,
@@ -845,6 +883,172 @@ function initDashboard() {
   showGreeting();
   setTimeout(tlConnect, 3500);
 }
+
+// ── WEBAUTHN / FACE ID ──
+var WEBAUTHN_RP_ID = window.location.hostname || 'ascendaenterprisecapital.com';
+var WEBAUTHN_KEY = 'aec_webauthn_credential';
+
+function bufferToBase64(buffer) {
+  return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+}
+
+function base64ToBuffer(base64) {
+  var binary = atob(base64);
+  var bytes = new Uint8Array(binary.length);
+  for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+function isWebAuthnAvailable() {
+  return window.PublicKeyCredential !== undefined && 
+         typeof window.PublicKeyCredential === 'function';
+}
+
+async function checkBiometricAvailable() {
+  if (!isWebAuthnAvailable()) return false;
+  try {
+    var available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+    return available;
+  } catch(e) { return false; }
+}
+
+async function initBiometric() {
+  var available = await checkBiometricAvailable();
+  if (!available) return;
+  
+  var stored = localStorage.getItem(WEBAUTHN_KEY);
+  var section = document.getElementById('biometric-section');
+  var regWrap = document.getElementById('register-biometric-wrap');
+  
+  if (stored) {
+    // Credential registered — show Face ID button
+    section.style.display = 'block';
+    document.getElementById('biometric-btn-text').textContent = 'Sign in with Face ID';
+    document.getElementById('biometric-status').textContent = 'Biometric credential registered on this device';
+  } else {
+    // Not registered yet — show register option after password login
+    regWrap.style.display = 'block';
+  }
+}
+
+async function registerBiometric() {
+  if (!isWebAuthnAvailable()) {
+    alert('WebAuthn not supported on this browser.');
+    return;
+  }
+  
+  var status = document.getElementById('biometric-status');
+  
+  try {
+    var challenge = new Uint8Array(32);
+    crypto.getRandomValues(challenge);
+    
+    var userId = new Uint8Array(16);
+    crypto.getRandomValues(userId);
+    
+    var credential = await navigator.credentials.create({
+      publicKey: {
+        challenge: challenge,
+        rp: { name: 'AEC Command Center', id: WEBAUTHN_RP_ID },
+        user: { id: userId, name: 'izaiah@ascendaenterprisecapital.com', displayName: 'Izaiah Cottle' },
+        pubKeyCredParams: [{ alg: -7, type: 'public-key' }, { alg: -257, type: 'public-key' }],
+        authenticatorSelection: {
+          authenticatorAttachment: 'platform',
+          userVerification: 'required',
+          requireResidentKey: false
+        },
+        timeout: 60000,
+        attestation: 'none'
+      }
+    });
+    
+    // Store credential ID
+    var credData = {
+      id: bufferToBase64(credential.rawId),
+      type: credential.type
+    };
+    localStorage.setItem(WEBAUTHN_KEY, JSON.stringify(credData));
+    
+    // Show biometric section
+    document.getElementById('biometric-section').style.display = 'block';
+    document.getElementById('register-biometric-wrap').style.display = 'none';
+    document.getElementById('biometric-btn-text').textContent = 'Sign in with Face ID';
+    document.getElementById('biometric-status').textContent = 'Face ID registered successfully';
+    
+  } catch(e) {
+    console.error('Registration error:', e);
+    if (e.name === 'NotAllowedError') {
+      document.getElementById('biometric-status').textContent = 'Registration cancelled.';
+    } else {
+      document.getElementById('biometric-status').textContent = 'Registration failed: ' + e.message;
+    }
+  }
+}
+
+async function biometricLogin() {
+  var stored = localStorage.getItem(WEBAUTHN_KEY);
+  if (!stored) { registerBiometric(); return; }
+  
+  var credData = JSON.parse(stored);
+  var status = document.getElementById('biometric-status');
+  status.textContent = 'Waiting for biometric...';
+  
+  try {
+    var challenge = new Uint8Array(32);
+    crypto.getRandomValues(challenge);
+    
+    var assertion = await navigator.credentials.get({
+      publicKey: {
+        challenge: challenge,
+        rpId: WEBAUTHN_RP_ID,
+        allowCredentials: [{ id: base64ToBuffer(credData.id), type: 'public-key' }],
+        userVerification: 'required',
+        timeout: 60000
+      }
+    });
+    
+    // Auth successful — unlock dashboard
+    status.textContent = 'Authenticated.';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'flex';
+    document.getElementById('dashboard').style.flexDirection = 'column';
+    document.getElementById('dashboard').style.minHeight = '100vh';
+    initDashboard();
+    setTimeout(showRegisterBiometricAfterLogin, 2000);
+    
+  } catch(e) {
+    if (e.name === 'NotAllowedError') {
+      status.textContent = 'Authentication cancelled or failed.';
+    } else {
+      status.textContent = 'Error: ' + e.message;
+    }
+  }
+}
+
+// Show register option after successful password login
+function showRegisterBiometricAfterLogin() {
+  checkBiometricAvailable().then(function(available) {
+    if (!available) return;
+    if (localStorage.getItem(WEBAUTHN_KEY)) return;
+    // Show a toast
+    var toast = document.createElement('div');
+    toast.style.cssText = 'position:fixed;bottom:5rem;right:1.5rem;background:#111;border:.5px solid #333;padding:1rem 1.25rem;z-index:9000;max-width:280px;';
+    toast.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.6rem;color:#fff;font-weight:700;margin-bottom:.4rem">Register Face ID?</div>' +
+      '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.58rem;color:#666;margin-bottom:.75rem">Login faster next time with biometrics</div>' +
+      '<button onclick="registerBiometric();this.parentElement.remove()" style="background:#fff;color:#000;border:none;font-family:\'JetBrains Mono\',monospace;font-size:.55rem;font-weight:700;letter-spacing:.1em;padding:.5rem 1rem;cursor:pointer;margin-right:.5rem">Register</button>' +
+      '<button onclick="this.parentElement.remove()" style="background:transparent;border:.5px solid #333;color:#666;font-family:\'JetBrains Mono\',monospace;font-size:.55rem;padding:.5rem .75rem;cursor:pointer">Not now</button>';
+    document.body.appendChild(toast);
+    setTimeout(function() { if(toast.parentElement) toast.remove(); }, 8000);
+  });
+}
+
+// Init biometric on page load
+window.addEventListener('load', function() {
+  var pw = document.getElementById('pw-input');
+  if(pw) { pw.value = ''; pw.focus(); }
+  initBiometric();
+});
+
 </script>
 </body>
 </html>

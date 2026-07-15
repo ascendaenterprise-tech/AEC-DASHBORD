@@ -248,25 +248,8 @@ canvas{width:100%;height:100%}
     <div class="login-logo">Ascenda Enterprise Capital</div>
     <div class="login-title">Command Center</div>
     <div class="login-sub">Private access only — authorized personnel</div>
-    <div id="biometric-section" style="display:none;margin-bottom:1rem">
-      <button class="biometric-btn" id="biometric-btn" onclick="biometricLogin()">
-        <span style="font-size:1.2rem">&#x1F511;</span>
-        <span id="biometric-btn-text">Sign in with Face ID</span>
-      </button>
-      <div class="biometric-status" id="biometric-status"></div>
-      <div style="display:flex;align-items:center;gap:.75rem;margin:.85rem 0">
-        <div style="flex:1;height:.5px;background:#1a1a1a"></div>
-        <span style="font-family:'JetBrains Mono',monospace;font-size:.52rem;color:#333;letter-spacing:.1em">OR</span>
-        <div style="flex:1;height:.5px;background:#1a1a1a"></div>
-      </div>
-    </div>
     <input class="login-input" type="password" id="pw-input" placeholder="Enter access code" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeypress="if(event.key==='Enter')checkPass()"/>
     <button class="login-btn" onclick="checkPass()">Access Dashboard →</button>
-    <div id="register-biometric-wrap" style="display:none;margin-top:.5rem">
-      <button class="biometric-btn" onclick="registerBiometric()" style="font-size:.55rem">
-        <span>+ Register Face ID for this device</span>
-      </button>
-    </div>
     <div class="login-error" id="login-error">Invalid access code. Try again.</div>
   </div>
 </div>
@@ -307,9 +290,9 @@ canvas{width:100%;height:100%}
         <div class="kpi-badge neu">Track below</div>
       </div>
       <div class="kpi-card" style="--accent:var(--gold)">
-        <div class="kpi-label">Site Traffic (30d)</div>
-        <div class="kpi-val">351</div>
-        <div class="kpi-sub">Views · 178 active users</div>
+        <div class="kpi-label">Site Traffic (90d)</div>
+        <div class="kpi-val">1K</div>
+        <div class="kpi-sub">Views · 478 active users</div>
         <div class="kpi-badge up">↑ From Google Analytics</div>
       </div>
       <div class="kpi-card" style="--accent:var(--green)">
@@ -317,6 +300,12 @@ canvas{width:100%;height:100%}
         <div class="kpi-val" id="kpi-pnl">—</div>
         <div class="kpi-sub">Live TradeLocker</div>
         <div class="kpi-badge neu" id="kpi-pnl-badge">Connecting...</div>
+      </div>
+      <div class="kpi-card" style="--accent:var(--green)">
+        <div class="kpi-label">Trading Accounts</div>
+        <div class="kpi-val" id="kpi-accounts-total">$0</div>
+        <div class="kpi-sub">Tradovate + IBKR combined</div>
+        <div class="kpi-badge neu" id="kpi-accounts-badge">Update below</div>
       </div>
       <div class="kpi-card" style="--accent:var(--red)">
         <div class="kpi-label">Emails Sent</div>
@@ -349,7 +338,7 @@ canvas{width:100%;height:100%}
           <button class="add-btn" onclick="addMentee()">+ Add</button>
         </div>
         <table>
-          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th><th></th></tr></thead>
+          <thead><tr><th>Name</th><th>Tier</th><th>Amount</th><th>Start</th></tr></thead>
           <tbody id="mentee-tbody">
             <tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>
           </tbody>
@@ -392,14 +381,13 @@ canvas{width:100%;height:100%}
       <!-- TRAFFIC -->
       <div class="panel">
         <div class="panel-title">Site Traffic</div>
-        <div class="stat-row"><div class="stat-key">Total Views</div><div class="stat-val">351</div></div>
-        <div class="stat-row"><div class="stat-key">Sessions</div><div class="stat-val">260</div></div>
-        <div class="stat-row"><div class="stat-key">Active Users</div><div class="stat-val">178</div></div>
-        <div class="stat-row"><div class="stat-key">Active Right Now</div><div class="stat-val td-green">3</div></div>
+        <div class="stat-row"><div class="stat-key">Total Views (90d)</div><div class="stat-val">1,000</div></div>
+        <div class="stat-row"><div class="stat-key">Sessions</div><div class="stat-val">735</div></div>
+        <div class="stat-row"><div class="stat-key">Active Users</div><div class="stat-val">478</div></div>
+        <div class="stat-row"><div class="stat-key">Active Right Now</div><div class="stat-val td-green">1</div></div>
         <div class="stat-row"><div class="stat-key">Top Country</div><div class="stat-val">🇺🇸 United States</div></div>
-        <div class="stat-row"><div class="stat-key">Returning Users</div><div class="stat-val">12</div></div>
-        <div class="stat-row"><div class="stat-key">New Users</div><div class="stat-val">123</div></div>
-        <div style="margin-top:1rem;font-family:var(--mono);font-size:.55rem;color:var(--text3)">Source: Google Analytics · Last updated today</div>
+        <div class="stat-row"><div class="stat-key">Total Revenue (GA)</div><div class="stat-val">$0.00</div></div>
+        <div style="margin-top:1rem;font-family:var(--mono);font-size:.55rem;color:var(--text3)">Source: Google Analytics · Last 90 days</div>
       </div>
 
       <!-- ACTIVITY FEED -->
@@ -434,6 +422,39 @@ canvas{width:100%;height:100%}
             <div class="activity-time">Jun 10</div>
             <div class="activity-text">Mercury account funded · Wire instructions live</div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROW 2.5: TRADING ACCOUNTS -->
+    <div class="grid-2">
+      <!-- TRADOVATE -->
+      <div class="panel">
+        <div class="panel-title">
+          Tradovate — Total Balance
+          <span class="panel-badge">Manual</span>
+        </div>
+        <div style="font-family:var(--display);font-size:1.7rem;color:#fff;margin-bottom:1rem" id="tv-total">$0</div>
+        <div id="tv-account-list"></div>
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:.5px solid var(--border)">
+          <input class="editable" id="tv-name" placeholder="Account name (e.g. Tradovate Main)" style="font-size:.75rem;margin-bottom:.5rem;display:block"/>
+          <input class="editable" id="tv-balance" placeholder="Balance (e.g. 42500.75)" type="number" step="0.01" style="font-size:.75rem;margin-bottom:.75rem;display:block"/>
+          <button class="add-btn" style="width:100%" onclick="addTradovateAccount()">+ Add / Update Account</button>
+        </div>
+      </div>
+
+      <!-- IBKR -->
+      <div class="panel">
+        <div class="panel-title">
+          Interactive Brokers — Total Balance
+          <span class="panel-badge">Manual</span>
+        </div>
+        <div style="font-family:var(--display);font-size:1.7rem;color:#fff;margin-bottom:1rem" id="ibkr-total">$0</div>
+        <div id="ibkr-account-list"></div>
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:.5px solid var(--border)">
+          <input class="editable" id="ibkr-name" placeholder="Account name (e.g. IBKR Margin)" style="font-size:.75rem;margin-bottom:.5rem;display:block"/>
+          <input class="editable" id="ibkr-balance" placeholder="Balance (e.g. 87250.30)" type="number" step="0.01" style="font-size:.75rem;margin-bottom:.75rem;display:block"/>
+          <button class="add-btn" style="width:100%" onclick="addIbkrAccount()">+ Add / Update Account</button>
         </div>
       </div>
     </div>
@@ -516,7 +537,11 @@ var state = {
   revenue: { investment: 0, mentorship: 0, other: 0 },
   activities: [],
   goals: [],
-  notes: ''
+  notes: '',
+  tradovateAccounts: [],
+  ibkrAccounts: [
+    { name: 'IBKR Main', balance: 1254185.01 }
+  ]
 };
 
 function saveState() {
@@ -558,50 +583,105 @@ function renderInvestors() {
 function addMentee() {
   var name = prompt('Client name:');
   if(!name) return;
-  var tierInput = prompt('Tier:\n1 = Foundation ($750)\n2 = Accelerator ($4,500)\n3 = Elite ($35,000)') || '1';
-  var tierMap = {'1':'Foundation','2':'Accelerator','3':'Elite','Foundation':'Foundation','Accelerator':'Accelerator','Elite':'Elite'};
-  var amtMap = {'Foundation':750,'Accelerator':4500,'Elite':35000};
-  var tier = tierMap[tierInput.trim()] || 'Foundation';
-  var amount = amtMap[tier];
+  var tier = prompt('Tier (Foundation / Accelerator / Elite):') || 'Foundation';
+  var amounts = {Foundation:750, Accelerator:4500, Elite:35000};
+  var amount = amounts[tier] || 750;
   var date = new Date().toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-  state.mentees.push({name:name, tier:tier, amount:amount, date:date});
+  state.mentees.push({name, tier, amount, date});
   state.revenue.mentorship += amount;
   saveState();
   renderAll();
-  renderRevenue();
-  renderKPIs();
-}
-
-function deleteMentee(i) {
-  if(!confirm('Remove ' + state.mentees[i].name + ' and deduct $' + state.mentees[i].amount.toLocaleString() + ' from revenue?')) return;
-  state.revenue.mentorship -= state.mentees[i].amount;
-  if(state.revenue.mentorship < 0) state.revenue.mentorship = 0;
-  state.mentees.splice(i, 1);
-  saveState();
-  renderAll();
-  renderRevenue();
-  renderKPIs();
 }
 
 function renderMentees() {
   var tbody = document.getElementById('mentee-tbody');
   if(!state.mentees.length) {
-    tbody.innerHTML = '<tr><td colspan="5" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="color:var(--text3);font-size:.72rem;padding:1rem .75rem">No clients logged yet. Click + Add to record one.</td></tr>';
     return;
   }
-  tbody.innerHTML = state.mentees.map(function(m, i) {
-    var color = m.tier === 'Elite' ? '#e0e0e0' : m.tier === 'Accelerator' ? '#bbb' : '#fff';
-    return '<tr>' +
-      '<td class="td-name">' + m.name + '</td>' +
-      '<td style="color:' + color + ';font-family:var(--mono);font-size:.75rem">' + m.tier + '</td>' +
-      '<td style="color:#e0e0e0;font-family:var(--mono);font-size:.75rem">$' + m.amount.toLocaleString() + '</td>' +
-      '<td style="font-family:var(--mono);font-size:.72rem;color:var(--text2)">' + m.date + '</td>' +
-      '<td><button onclick="deleteMentee(' + i + ')" style="background:none;border:.5px solid #333;color:#666;font-family:var(--mono);font-size:.55rem;padding:.2rem .45rem;cursor:pointer">x Remove</button></td>' +
-    '</tr>';
+  tbody.innerHTML = state.mentees.map(function(m) {
+    var color = m.tier === 'Elite' ? 'td-gold' : m.tier === 'Accelerator' ? 'td-blue' : 'td-green';
+    return '<tr><td class="td-name">'+m.name+'</td><td class="'+color+'">'+m.tier+'</td><td class="td-gold">$'+m.amount.toLocaleString()+'</td><td>'+m.date+'</td></tr>';
   }).join('');
 }
 
-// ── REVENUE ──
+// ── TRADING ACCOUNTS (manual balances — Tradovate + IBKR) ──
+function addTradovateAccount() {
+  var name = document.getElementById('tv-name').value.trim();
+  var balance = parseFloat(document.getElementById('tv-balance').value);
+  if(!name || isNaN(balance)) return;
+  upsertAccount(state.tradovateAccounts, name, balance);
+  document.getElementById('tv-name').value = '';
+  document.getElementById('tv-balance').value = '';
+  saveState();
+  renderTradingAccounts();
+}
+
+function addIbkrAccount() {
+  var name = document.getElementById('ibkr-name').value.trim();
+  var balance = parseFloat(document.getElementById('ibkr-balance').value);
+  if(!name || isNaN(balance)) return;
+  upsertAccount(state.ibkrAccounts, name, balance);
+  document.getElementById('ibkr-name').value = '';
+  document.getElementById('ibkr-balance').value = '';
+  saveState();
+  renderTradingAccounts();
+}
+
+function upsertAccount(list, name, balance) {
+  var existing = list.find(function(a) { return a.name.toLowerCase() === name.toLowerCase(); });
+  if(existing) {
+    existing.balance = balance;
+  } else {
+    list.push({name: name, balance: balance});
+  }
+}
+
+function removeAccount(list, index) {
+  list.splice(index, 1);
+  saveState();
+  renderTradingAccounts();
+}
+
+function fmtBalance(n) {
+  return '$' + Number(n).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+}
+
+function renderAccountList(containerId, list, removeFn) {
+  var el = document.getElementById(containerId);
+  if(!list.length) {
+    el.innerHTML = '<div style="color:var(--text3);font-size:.72rem;padding:.5rem 0">No accounts added yet.</div>';
+    return;
+  }
+  el.innerHTML = list.map(function(a, i) {
+    return '<div class="stat-row"><div class="stat-key">'+a.name+'</div>'+
+      '<div style="display:flex;align-items:center;gap:.6rem">'+
+      '<span class="stat-val">'+fmtBalance(a.balance)+'</span>'+
+      '<button class="add-btn" style="padding:.15rem .4rem;font-size:.5rem;border-color:#666;color:#999" onclick="'+removeFn+'('+i+')">×</button>'+
+      '</div></div>';
+  }).join('');
+}
+
+function renderTradingAccounts() {
+  var tvTotal = state.tradovateAccounts.reduce(function(s, a) { return s + a.balance; }, 0);
+  var ibkrTotal = state.ibkrAccounts.reduce(function(s, a) { return s + a.balance; }, 0);
+  var combined = tvTotal + ibkrTotal;
+
+  document.getElementById('tv-total').textContent = fmtBalance(tvTotal);
+  document.getElementById('ibkr-total').textContent = fmtBalance(ibkrTotal);
+  renderAccountList('tv-account-list', state.tradovateAccounts, 'removeTradovateAccount');
+  renderAccountList('ibkr-account-list', state.ibkrAccounts, 'removeIbkrAccount');
+
+  document.getElementById('kpi-accounts-total').textContent = fmtBalance(combined);
+  var badge = document.getElementById('kpi-accounts-badge');
+  badge.textContent = combined > 0 ? '↑ Updated' : 'Update below';
+  badge.className = 'kpi-badge ' + (combined > 0 ? 'up' : 'neu');
+}
+
+function removeTradovateAccount(i) { removeAccount(state.tradovateAccounts, i); }
+function removeIbkrAccount(i) { removeAccount(state.ibkrAccounts, i); }
+
+
 function logRevenue() {
   var source = document.getElementById('rev-source').value.trim();
   var amount = parseFloat(document.getElementById('rev-amount').value);
@@ -692,7 +772,7 @@ function saveNotes() {
 var TL = {
   baseUrl: 'https://tradelocker-proxy.ascendaenterprise.workers.dev',
   email: 'izaiahcottle0@gmail.com',
-  password: '[REDACTED]$',
+  password: '881891Ic$',
   server: 'Herofx',
   accessToken: null,
   accountId: null,
@@ -771,6 +851,7 @@ function renderAll() {
   renderMentees();
   renderRevenue();
   renderGoals();
+  renderTradingAccounts();
 }
 
 // Clear password on load so browser doesn't remember it
@@ -792,16 +873,6 @@ function getGreeting() {
     "Good morning, sir. Ascenda Enterprise Capital is live. The world is watching.",
     "Good morning, Mr. Cottle. Today is another chance to make history. Don't waste it.",
     "Good morning, sir. The kind of discipline you carry — it doesn't go unnoticed.",
-    "Good morning, Izaiah. The NQ is about to open. You know what to do.",
-    "Good morning, sir. Ascenda doesn't sleep. Neither do the markets. You're right on time.",
-    "Good morning, Izaiah. Another session. Another chance to build what others only talk about.",
-    "Good morning, Mr. Cottle. The pre-market is moving. Your edge is already in place.",
-    "Good morning, sir. Most people are checking their phones. You're checking the order flow.",
-    "Good morning, Izaiah. You built something real from nothing. Today you protect it.",
-    "Good morning, Mr. Cottle. The capital doesn't allocate itself. That's why there's you.",
-    "Good morning, sir. Atlanta. Global markets. Three verticals. One founder. Impressive.",
-    "Good morning, Izaiah. The session window opens soon. You've already done the work.",
-    "Good morning, Mr. Cottle. The kind of mornings you put in — they compound over time.",
   ];
   var afternoon = [
     "Good afternoon, Mr. Cottle. The markets are moving. So are you.",
@@ -814,16 +885,6 @@ function getGreeting() {
     "Good afternoon, sir. The foundation you're laying right now — this is what legacy looks like.",
     "Good afternoon, Mr. Cottle. You are not just building a fund. You are building a name.",
     "Good afternoon, sir. It has not gone unnoticed how hard you've been working.",
-    "Good afternoon, Izaiah. Mid-session check-in. The confluence is yours to read.",
-    "Good afternoon, Mr. Cottle. OHOS and AEC both need your attention. You'll manage.",
-    "Good afternoon, sir. The market doesn't care how tired you are. Good thing you're not.",
-    "Good afternoon, Izaiah. Every hour you spend on this is an hour your competition doesn't.",
-    "Good afternoon, Mr. Cottle. The Z-Score doesn't lie. Neither do your results.",
-    "Good afternoon, sir. Izaiah Cottle — founder, trader, builder. The work shows.",
-    "Good afternoon, Mr. Cottle. The outreach is going out. The deals are coming in.",
-    "Good afternoon, Izaiah. Three verticals. One operator. No ceiling. That's the AEC story.",
-    "Good afternoon, sir. The market respects no one. Except those who understand it. Like you.",
-    "Good afternoon, Mr. Cottle. What you've built at Ascenda — allocators will take notice.",
   ];
   var evening = [
     "Good evening, Mr. Cottle. The markets have closed for the day.",
@@ -836,16 +897,6 @@ function getGreeting() {
     "Good evening, sir. The kind of vision you carry is rare. Protect it.",
     "Good evening, Mr. Cottle. You see what others can't see yet. That's the edge.",
     "Good evening, sir. Ascenda Enterprise Capital is becoming something real. You made that happen.",
-    "Good evening, Izaiah. Markets are closed. Ascenda is not.",
-    "Good evening, Mr. Cottle. The session is over. The build continues.",
-    "Good evening, sir. Post-market review. Trade log. Tomorrow's prep. In that order.",
-    "Good evening, Izaiah. Another day of 32,000+ trades worth of data backing your decisions.",
-    "Good evening, Mr. Cottle. Real estate, trading, private equity — all moving simultaneously. Only you.",
-    "Good evening, sir. The mentorship clients are watching what you do. Make it count.",
-    "Good evening, Izaiah. You didn't just trade today. You built infrastructure around it.",
-    "Good evening, Mr. Cottle. Stockbridge to the world stage. The trajectory is clear.",
-    "Good evening, sir. The kind of firm you're building — it doesn't happen without nights like this.",
-    "Good evening, Izaiah. The work you do after the market closes is what separates you.",
   ];
   var night = [
     "Still working, Mr. Cottle? The best deals are made after midnight.",
@@ -858,16 +909,6 @@ function getGreeting() {
     "Most have logged off for the night, sir. You never really do.",
     "The hours you put in when no one is watching — that's what separates Ascenda from everything else.",
     "Late night, sir. I've prepared everything you need. The rest is yours.",
-    "Late night, Izaiah. The NQ futures open again in a few hours. You'll be ready.",
-    "Still at it, Mr. Cottle. The firm doesn't build itself at this hour either.",
-    "Late night, sir. Izaiah Cottle — the kind of founder who doesn't stop when others do.",
-    "It's late, Izaiah. But the pipeline doesn't care. Neither do you.",
-    "Mr. Cottle. Most people dream about what you're actually doing right now.",
-    "Late night, sir. Ascenda, OHOS, the markets — all of it is still moving. So are you.",
-    "Still here, Izaiah. The vision you're executing on — it requires exactly this.",
-    "Late night, Mr. Cottle. The only people who understand why you're still awake are the ones building too.",
-    "It's after midnight, sir. The kind of work ethic you carry — it doesn't clock out.",
-    "Late night again, Izaiah. The AEC command center is quiet. You are not.",
   ];
 
   var lastKey = sessionStorage.getItem('aec_last_greeting');
@@ -923,172 +964,6 @@ function initDashboard() {
   showGreeting();
   setTimeout(tlConnect, 3500);
 }
-
-// ── WEBAUTHN / FACE ID ──
-var WEBAUTHN_RP_ID = window.location.hostname || 'ascendaenterprisecapital.com';
-var WEBAUTHN_KEY = 'aec_webauthn_credential';
-
-function bufferToBase64(buffer) {
-  return btoa(String.fromCharCode(...new Uint8Array(buffer)));
-}
-
-function base64ToBuffer(base64) {
-  var binary = atob(base64);
-  var bytes = new Uint8Array(binary.length);
-  for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-  return bytes.buffer;
-}
-
-function isWebAuthnAvailable() {
-  return window.PublicKeyCredential !== undefined && 
-         typeof window.PublicKeyCredential === 'function';
-}
-
-async function checkBiometricAvailable() {
-  if (!isWebAuthnAvailable()) return false;
-  try {
-    var available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-    return available;
-  } catch(e) { return false; }
-}
-
-async function initBiometric() {
-  var available = await checkBiometricAvailable();
-  if (!available) return;
-  
-  var stored = localStorage.getItem(WEBAUTHN_KEY);
-  var section = document.getElementById('biometric-section');
-  var regWrap = document.getElementById('register-biometric-wrap');
-  
-  if (stored) {
-    // Credential registered — show Face ID button
-    section.style.display = 'block';
-    document.getElementById('biometric-btn-text').textContent = 'Sign in with Face ID';
-    document.getElementById('biometric-status').textContent = 'Biometric credential registered on this device';
-  } else {
-    // Not registered yet — show register option after password login
-    regWrap.style.display = 'block';
-  }
-}
-
-async function registerBiometric() {
-  if (!isWebAuthnAvailable()) {
-    alert('WebAuthn not supported on this browser.');
-    return;
-  }
-  
-  var status = document.getElementById('biometric-status');
-  
-  try {
-    var challenge = new Uint8Array(32);
-    crypto.getRandomValues(challenge);
-    
-    var userId = new Uint8Array(16);
-    crypto.getRandomValues(userId);
-    
-    var credential = await navigator.credentials.create({
-      publicKey: {
-        challenge: challenge,
-        rp: { name: 'AEC Command Center', id: WEBAUTHN_RP_ID },
-        user: { id: userId, name: 'izaiah@ascendaenterprisecapital.com', displayName: 'Izaiah Cottle' },
-        pubKeyCredParams: [{ alg: -7, type: 'public-key' }, { alg: -257, type: 'public-key' }],
-        authenticatorSelection: {
-          authenticatorAttachment: 'platform',
-          userVerification: 'required',
-          requireResidentKey: false
-        },
-        timeout: 60000,
-        attestation: 'none'
-      }
-    });
-    
-    // Store credential ID
-    var credData = {
-      id: bufferToBase64(credential.rawId),
-      type: credential.type
-    };
-    localStorage.setItem(WEBAUTHN_KEY, JSON.stringify(credData));
-    
-    // Show biometric section
-    document.getElementById('biometric-section').style.display = 'block';
-    document.getElementById('register-biometric-wrap').style.display = 'none';
-    document.getElementById('biometric-btn-text').textContent = 'Sign in with Face ID';
-    document.getElementById('biometric-status').textContent = 'Face ID registered successfully';
-    
-  } catch(e) {
-    console.error('Registration error:', e);
-    if (e.name === 'NotAllowedError') {
-      document.getElementById('biometric-status').textContent = 'Registration cancelled.';
-    } else {
-      document.getElementById('biometric-status').textContent = 'Registration failed: ' + e.message;
-    }
-  }
-}
-
-async function biometricLogin() {
-  var stored = localStorage.getItem(WEBAUTHN_KEY);
-  if (!stored) { registerBiometric(); return; }
-  
-  var credData = JSON.parse(stored);
-  var status = document.getElementById('biometric-status');
-  status.textContent = 'Waiting for biometric...';
-  
-  try {
-    var challenge = new Uint8Array(32);
-    crypto.getRandomValues(challenge);
-    
-    var assertion = await navigator.credentials.get({
-      publicKey: {
-        challenge: challenge,
-        rpId: WEBAUTHN_RP_ID,
-        allowCredentials: [{ id: base64ToBuffer(credData.id), type: 'public-key' }],
-        userVerification: 'required',
-        timeout: 60000
-      }
-    });
-    
-    // Auth successful — unlock dashboard
-    status.textContent = 'Authenticated.';
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'flex';
-    document.getElementById('dashboard').style.flexDirection = 'column';
-    document.getElementById('dashboard').style.minHeight = '100vh';
-    initDashboard();
-    setTimeout(showRegisterBiometricAfterLogin, 2000);
-    
-  } catch(e) {
-    if (e.name === 'NotAllowedError') {
-      status.textContent = 'Authentication cancelled or failed.';
-    } else {
-      status.textContent = 'Error: ' + e.message;
-    }
-  }
-}
-
-// Show register option after successful password login
-function showRegisterBiometricAfterLogin() {
-  checkBiometricAvailable().then(function(available) {
-    if (!available) return;
-    if (localStorage.getItem(WEBAUTHN_KEY)) return;
-    // Show a toast
-    var toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;bottom:5rem;right:1.5rem;background:#111;border:.5px solid #333;padding:1rem 1.25rem;z-index:9000;max-width:280px;';
-    toast.innerHTML = '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.6rem;color:#fff;font-weight:700;margin-bottom:.4rem">Register Face ID?</div>' +
-      '<div style="font-family:\'JetBrains Mono\',monospace;font-size:.58rem;color:#666;margin-bottom:.75rem">Login faster next time with biometrics</div>' +
-      '<button onclick="registerBiometric();this.parentElement.remove()" style="background:#fff;color:#000;border:none;font-family:\'JetBrains Mono\',monospace;font-size:.55rem;font-weight:700;letter-spacing:.1em;padding:.5rem 1rem;cursor:pointer;margin-right:.5rem">Register</button>' +
-      '<button onclick="this.parentElement.remove()" style="background:transparent;border:.5px solid #333;color:#666;font-family:\'JetBrains Mono\',monospace;font-size:.55rem;padding:.5rem .75rem;cursor:pointer">Not now</button>';
-    document.body.appendChild(toast);
-    setTimeout(function() { if(toast.parentElement) toast.remove(); }, 8000);
-  });
-}
-
-// Init biometric on page load
-window.addEventListener('load', function() {
-  var pw = document.getElementById('pw-input');
-  if(pw) { pw.value = ''; pw.focus(); }
-  initBiometric();
-});
-
 </script>
 </body>
 </html>
